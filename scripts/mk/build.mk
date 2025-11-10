@@ -9,7 +9,7 @@ TFLINT_PATH ?= .tflint.hcl
 
 .PHONY: lint
 lint:
-	@tflint --config ${PWD}/${TFLINT_PATH} --recursive --format compact $(ARGS) || \
+	@tflint --config "${PWD}/${TFLINT_PATH}" --recursive --format compact $(ARGS) || \
 		echo "tflint failed, running 'make lint-fix' may fix some issues"
 
 .PHONY: lint-fix

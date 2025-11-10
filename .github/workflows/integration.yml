@@ -121,6 +121,7 @@ jobs:
   opentofu-lint:
     name: Opentofu Lint
     runs-on: ubuntu-latest
+    needs: run-workflow
     permissions:
       pull-requests: write
       security-events: write
@@ -141,7 +142,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: |-
           mkdir -p reports/
-          tflint --config .tflint.hcl --recursive --format sarif | tee reports/tflint.sarif
+          tflint --config "$(pwd)/.tflint.hcl" --recursive --format sarif | tee reports/tflint.sarif
       - if: ${{ !cancelled() }}
         uses: github/codeql-action/upload-sarif@192325c86100d080feab897ff886c34abd4c83a3 # v3.30.3
         with:
