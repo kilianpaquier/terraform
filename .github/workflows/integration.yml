@@ -121,6 +121,9 @@ jobs:
   opentofu-lint:
     name: Opentofu Lint
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      security-events: write
     steps:
       # https://docs.stepsecurity.io/harden-runner/workflow-runs
       # https://github.com/marketplace/actions/harden-runner
