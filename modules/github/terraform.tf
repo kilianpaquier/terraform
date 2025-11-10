@@ -62,7 +62,7 @@ module "terraform" {
     },
     { environment = "release", protected_branches = true },
     {
-      environment = "terraform"
+      environment = "production"
       secrets = [
         { secret_name = "AWS_ACCESS_KEY", from = "AWS_ACCESS_KEY" },
         { secret_name = "AWS_SECRET_KEY", from = "AWS_SECRET_KEY" },

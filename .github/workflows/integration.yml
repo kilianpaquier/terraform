@@ -93,22 +93,12 @@ jobs:
     name: Opentofu Check ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs: run-workflow
-    environment: terraform
     strategy:
       fail-fast: false
       matrix:
         include:
           - directory: modules/github
             name: (modules/github)
-            vars:
-              AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-              AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-              TF_VAR_codecov_token: ${{ secrets.CODECOV_TOKEN }}
-              TF_VAR_github_repository_owner: ${{ github.repository_owner }}
-              TF_VAR_kickr_private_key: ${{ secrets.KICKR_PRIVATE_KEY }}
-              TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-              TF_VAR_renovate_token: ${{ secrets.RENOVATE_TOKEN }}
-              TF_VAR_terraform_token: ${{ secrets.TERRAFORM_TOKEN }}
     defaults:
       run:
         working-directory: ${{ matrix.directory }}
@@ -125,15 +115,12 @@ jobs:
           # renovate: datasource=github-tags packageName=opentofu/opentofu depName=opentofu
           tofu_version: 1.10.6
       - run: tofu fmt -check
-      - run: tofu init
-        env: ${{ matrix.vars }}
+      - run: tofu init -backend=false
       - run: tofu validate -no-color
 
   opentofu-lint:
     name: Opentofu Lint
     runs-on: ubuntu-latest
-    needs: opentofu-check
-    environment: terraform
     steps:
       # https://docs.stepsecurity.io/harden-runner/workflow-runs
       # https://github.com/marketplace/actions/harden-runner
@@ -158,29 +145,19 @@ jobs:
           category: tflint
           sarif_file: reports/tflint.sarif
 
-  opentofu-plan:
-    name: Opentofu Plan ${{ matrix.name }}
+  opentofu-plan-modules-github:
+    name: Opentofu Plan (modules/github)
     runs-on: ubuntu-latest
-    needs: opentofu-lint
-    environment: terraform
+    needs: opentofu-check
+    environment: ${{ matrix.environment }}
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - directory: modules/github
-            name: (modules/github)
-            vars:
-              AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
-              AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
-              TF_VAR_codecov_token: ${{ secrets.CODECOV_TOKEN }}
-              TF_VAR_github_repository_owner: ${{ github.repository_owner }}
-              TF_VAR_kickr_private_key: ${{ secrets.KICKR_PRIVATE_KEY }}
-              TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-              TF_VAR_renovate_token: ${{ secrets.RENOVATE_TOKEN }}
-              TF_VAR_terraform_token: ${{ secrets.TERRAFORM_TOKEN }}
+        environment:
+          - production
     defaults:
       run:
-        working-directory: ${{ matrix.directory }}
+        working-directory: modules/github
     steps:
       # https://docs.stepsecurity.io/harden-runner/workflow-runs
       # https://github.com/marketplace/actions/harden-runner
@@ -196,7 +173,15 @@ jobs:
       - run: |-
           tofu init
           tofu plan -no-color
-        env: ${{ matrix.vars }}
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          TF_VAR_codecov_token: ${{ secrets.CODECOV_TOKEN }}
+          TF_VAR_github_repository_owner: ${{ github.repository_owner }}
+          TF_VAR_kickr_private_key: ${{ secrets.KICKR_PRIVATE_KEY }}
+          TF_VAR_netlify_auth_token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          TF_VAR_renovate_token: ${{ secrets.RENOVATE_TOKEN }}
+          TF_VAR_terraform_token: ${{ secrets.TERRAFORM_TOKEN }}
 
   workflow-status:
     name: Status
@@ -205,7 +190,7 @@ jobs:
     needs:
       - opentofu-check
       - opentofu-lint
-      - opentofu-plan
+      - opentofu-plan-modules-github
       - pre-commit
     steps:
       # https://docs.stepsecurity.io/harden-runner/workflow-runs

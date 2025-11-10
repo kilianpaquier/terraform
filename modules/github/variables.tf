@@ -9,6 +9,7 @@ variable "codecov_token" {
 # TF_VAR_github_repository_owner
 variable "github_repository_owner" {
   type = string
+  default = "kilianpaquier"
 }
 
 # TF_VAR_kickr_private_key
