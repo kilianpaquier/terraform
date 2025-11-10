@@ -67,6 +67,8 @@ module "terraform" {
         { secret_name = "AWS_ACCESS_KEY", from = "AWS_ACCESS_KEY" },
         { secret_name = "AWS_SECRET_KEY", from = "AWS_SECRET_KEY" },
         { secret_name = "CODECOV_TOKEN", from = "TF_VAR_codecov_token" },
+        { secret_name = "KICKR_PRIVATE_KEY", from = "TF_VAR_kickr_private_key" },
+        { secret_name = "NETLIFY_AUTH_TOKEN", from = "TF_VAR_netlify_auth_token" },
         { secret_name = "RENOVATE_TOKEN", from = "TF_VAR_renovate_token" },
         { secret_name = "TERRAFORM_TOKEN", from = "TF_VAR_terraform_token" }
       ]
