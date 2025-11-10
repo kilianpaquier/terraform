@@ -93,6 +93,7 @@ jobs:
     name: Opentofu Check ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs: run-workflow
+    environment: terraform
     strategy:
       fail-fast: false
       matrix:
@@ -132,6 +133,7 @@ jobs:
     name: Opentofu Lint
     runs-on: ubuntu-latest
     needs: opentofu-check
+    environment: terraform
     steps:
       # https://docs.stepsecurity.io/harden-runner/workflow-runs
       # https://github.com/marketplace/actions/harden-runner
@@ -160,6 +162,7 @@ jobs:
     name: Opentofu Plan ${{ matrix.name }}
     runs-on: ubuntu-latest
     needs: opentofu-lint
+    environment: terraform
     strategy:
       fail-fast: false
       matrix:
