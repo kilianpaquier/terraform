@@ -34,14 +34,15 @@ resource "github_branch_protection" "zsh-customs" {
   pattern       = each.value
   repository_id = github_repository.zsh-customs.name
 
+  # enforce_admins                  = true
   require_conversation_resolution = true
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = true
-    require_code_owner_reviews      = true
-    require_last_push_approval      = true
-    required_approving_review_count = 1
-  }
+  # required_pull_request_reviews {
+  #   dismiss_stale_reviews           = true
+  #   require_code_owner_reviews      = true
+  #   require_last_push_approval      = true
+  #   required_approving_review_count = 1
+  # }
   required_status_checks {
     strict = true
   }

@@ -16,7 +16,12 @@ variable "environments" {
       value         = string
     })), [])
   }))
-  default  = []
+  default = []
+}
+
+variable "default_branch" {
+  type    = string
+  default = "main"
 }
 
 variable "labels" {
@@ -25,7 +30,7 @@ variable "labels" {
     color       = string
     description = string
   }))
-  default  = []
+  default = []
 }
 
 variable "owner" {
@@ -42,7 +47,7 @@ variable "secrets" {
     from            = optional(string, null)
     encrypted_value = optional(string, null)
   }))
-  default  = []
+  default = []
 }
 
 variable "variables" {
@@ -50,5 +55,5 @@ variable "variables" {
     variable_name = string
     value         = string
   }))
-  default  = []
+  default = []
 }

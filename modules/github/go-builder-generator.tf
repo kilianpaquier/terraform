@@ -35,14 +35,15 @@ resource "github_branch_protection" "go-builder-generator" {
   pattern       = each.value
   repository_id = github_repository.go-builder-generator.name
 
+  # enforce_admins                  = true
   require_conversation_resolution = true
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = true
-    require_code_owner_reviews      = true
-    require_last_push_approval      = true
-    required_approving_review_count = 1
-  }
+  # required_pull_request_reviews {
+  #   dismiss_stale_reviews           = true
+  #   require_code_owner_reviews      = true
+  #   require_last_push_approval      = true
+  #   required_approving_review_count = 1
+  # }
   required_status_checks {
     strict = true
   }

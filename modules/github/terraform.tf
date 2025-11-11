@@ -1,6 +1,6 @@
 resource "github_repository" "terraform" {
   name        = "terraform"
-  description = ""
+  description = "My terraform resources (GitHub, GitLab, cloud instances)"
 
   has_downloads = false
   has_issues    = true
@@ -29,19 +29,20 @@ resource "github_repository" "terraform" {
 
 resource "github_branch_protection" "terraform" {
   depends_on = [github_repository.terraform]
-  for_each   = toset(["next"])
+  for_each   = toset(["main"])
 
   pattern       = each.value
   repository_id = github_repository.terraform.name
 
+  # enforce_admins                  = true
   require_conversation_resolution = true
 
-  required_pull_request_reviews {
-    dismiss_stale_reviews           = true
-    require_code_owner_reviews      = true
-    require_last_push_approval      = true
-    required_approving_review_count = 1
-  }
+  # required_pull_request_reviews {
+  #   dismiss_stale_reviews           = true
+  #   require_code_owner_reviews      = true
+  #   require_last_push_approval      = true
+  #   required_approving_review_count = 1
+  # }
   required_status_checks {
     strict = true
   }

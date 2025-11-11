@@ -34,6 +34,7 @@
 #   pattern       = each.value
 #   repository_id = github_repository.cli-sdk.name
 
+#   enforce_admins                  = true
 #   require_conversation_resolution = true
 
 #   required_pull_request_reviews {

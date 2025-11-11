@@ -35,6 +35,7 @@
 #   pattern       = each.value
 #   repository_id = github_repository.craft.name
 
+#   enforce_admins                  = true
 #   require_conversation_resolution = true
 
 #   required_pull_request_reviews {
@@ -52,8 +53,9 @@
 #   depends_on = [github_repository.craft]
 #   source     = "./repository"
 
-#   owner      = var.github_repository_owner
-#   repository = github_repository.craft.name
+#   default_branch = "beta"
+#   owner          = var.github_repository_owner
+#   repository     = github_repository.craft.name
 
 #   environments = [{ environment = "release", protected_branches = true }]
 #   secrets      = [{ secret_name = "CODECOV_TOKEN", from = "TF_VAR_codecov_token" }]
