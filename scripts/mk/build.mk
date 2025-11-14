@@ -16,8 +16,8 @@ lint:
 lint-fix:
 	@ARGS="--fix" make -s lint
 
-plan-modules-github:
-	@tofu -chdir=modules/github plan
+plan-modules-git:
+	@tofu -chdir=modules/git plan
 
-test-modules-github:
-	@tofu -chdir=modules/github test
+test-modules-git:
+	@tofu -chdir=modules/git test

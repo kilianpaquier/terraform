@@ -1,0 +1,66 @@
+# This file is maintained automatically by "tofu init".
+# Manual edits may be lost in future updates.
+
+provider "registry.opentofu.org/gitlabhq/gitlab" {
+  version     = "18.5.0"
+  constraints = "18.5.0"
+  hashes = [
+    "h1:7DEPa6jJvBsvGscgX04tMW9GYon2xLYAKQIQpvbmnWI=",
+    "zh:0eead45d31b22f063c44085156cb0d4b1385c54eed989b8e709d45fd181c4205",
+    "zh:1011310e916a3f9fa63efd6b337dd8d0c3be37cff38e9335e4225f8db810183f",
+    "zh:1f08ca2ed8d596ca010da3520a74377781b46b25caa4f84f5a43fa2f77eb86de",
+    "zh:302747fa719daf132acf5237f963ae08b5373ff65c642495eadf1f7123d0e180",
+    "zh:3819328a721b367601a8d2794c86e953e32cd72dd215c306c730607f496d6347",
+    "zh:899297500a8fd680d6672da1ca5f0fd27a211f67e472f075ef51399652be12f2",
+    "zh:8c3d018318ef7059d5104db8a0314e51ace492c5366e8939f754a57531524226",
+    "zh:acd284cbd084c476bd85847ccb37f4f5fdb32e1184cd6a34d43b08e86b48181c",
+    "zh:afa69fbc6e4bee23cb8f97cd51c1891ad8dad08b2dc383ce39259dc4df15651d",
+    "zh:b489618b4c26d48addf825664f0ce218ae5af1f99ca2da8a6df9e152aef6ba7b",
+    "zh:bd6625c22539b7a16866cd41c29421af9dc8c9432a8c8bd14687065dd1be4295",
+    "zh:d51d23721ab218e60a4a408f5b63b04a753fc53b4ae92ecc6e2bbc125fa70809",
+    "zh:e258f6623d249542b6b1144f4ab84aed67a7e5a37cf31ed07ca969bf0de2800f",
+    "zh:f413eb7454bc6e2ce9eab10c55025e6b8b33f925e76dbf984d249f7b16821e6d",
+    "zh:f809ab383cca0a5f83072981c64208cbd7fa67e986a86ee02dd2c82333221e32",
+  ]
+}
+
+provider "registry.opentofu.org/hashicorp/external" {
+  version     = "2.3.5"
+  constraints = "2.3.5"
+  hashes = [
+    "h1:jcVmeuuz74tdRt2kj0MpUG9AORdlAlRRQ3k61y0r5Vc=",
+    "zh:1fb9aca1f068374a09d438dba84c9d8ba5915d24934a72b6ef66ef6818329151",
+    "zh:3eab30e4fcc76369deffb185b4d225999fc82d2eaaa6484d3b3164a4ed0f7c49",
+    "zh:4f8b7a4832a68080f0bf4f155b56a691832d8a91ce8096dac0f13a90081abc50",
+    "zh:5ff1935612db62e48e4fe6cfb83dfac401b506a5b7b38342217616fbcab70ce0",
+    "zh:993192234d327ec86726041eb6d1efb001e41f32e4518ad8b9b162130b65ee9a",
+    "zh:ce445e68282a2c4b2d1f994a2730406df4ea47914c0932fb4a7eb040a7ec7061",
+    "zh:e305e17216840c54194141fb852839c2cedd6b41abd70cf8d606d6e88ed40e64",
+    "zh:edba65fb241d663c09aa2cbf75026c840e963d5195f27000f216829e49811437",
+    "zh:f306cc6f6ec9beaf75bdcefaadb7b77af320b1f9b56d8f50df5ebd2189a93148",
+    "zh:fb2ff9e1f86796fda87e1f122d40568912a904da51d477461b850d81a0105f3d",
+  ]
+}
+
+provider "registry.opentofu.org/integrations/github" {
+  version     = "6.8.0"
+  constraints = "6.8.0"
+  hashes = [
+    "h1:nv/M2bSR+ANE6fvXaf6jAbyW0KgR6gF7MS+vQmVSfdY=",
+    "zh:0c3bd1b6ccb256205ce7404553cadfd28d3fc1be63c382b4a90d184fb31caf02",
+    "zh:18a0a9fb218e90452f38b2289ee28ae47702a8911a81f8b67662bbd9e7368d4e",
+    "zh:2454a4160183e8e65399962085e68e87e2f6a2dc1355acba55fe92dd87dfcfed",
+    "zh:2a5374f21cc0caa57500abde9e5508ac8a3c8a757212f34bb4527c8f4209bb57",
+    "zh:3ef00099bc8bca8c9d777930d0fc788e61aac07493a089eb473a1c538b852eeb",
+    "zh:549168f6ed66033da09455f2877e7dd11aa53d2df6d4e4b30fa0cb139d5fcc22",
+    "zh:5c5c71bcc2be53ea67ae4ee284befbe170a22094b94d4994c2b864aa4d51f732",
+    "zh:779726f7b8f05b13aaf9fe920ef2338aa557d904da099fd66d6eb52c0e19d482",
+    "zh:819c7ce4a253936b66b7efbc28b9342e84ea8f81bea09c89f02cbf724ed6413a",
+    "zh:82bd1bbc9901c6968a37783adff0f00e195cdab5421d99004ef5be0da53bb09c",
+    "zh:b45fe64455170b76250e86285704f4fca00856fb7100acb15977ad60667af389",
+    "zh:c931b10f7e96e52ced12f0b3efeded7dd3062d5524a927fcf7c9a726a5900706",
+    "zh:d986242b6ec66fd435eaace728bfe6f9a22214b47d9348cb9b073a869e3b3686",
+    "zh:e130371998f0e3c20b650abb45933260959862ff06d6c2183f15a354f3faf6e8",
+    "zh:fbd1fee2c9df3aa19cf8851ce134dea6e45ea01cb85695c1726670c285797e25",
+  ]
+}

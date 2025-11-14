@@ -2,24 +2,22 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/kickr-dev/kickr/beta/.schemas/kickr.v1.schema.json
 version: 1
 ci:
-  provider: github
+  provider: gitlab
   options:
-    - codeql
-    - harden-runner
-    - kickr:github-app
+    - kickr
   terraform:
     apply: manual
     environments:
       - production
 dependencies:
-  manager: dependabot
+  manager: renovate
+exclude:
+  - shell
 license: mit
 maintainers:
   - name: kilianpaquier
-platform: github
-pre-commit:
-  - conventional-commits
+platform: gitlab
 terraform:
   engine: opentofu
   modules:
-    - modules/github
+    - modules/git
