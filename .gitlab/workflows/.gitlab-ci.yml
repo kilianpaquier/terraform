@@ -17,7 +17,7 @@ include:
 
   # Terraform template
   # https://gitlab.com/to-be-continuous/terraform
-  - project: to-be-continuous/sonar
+  - project: to-be-continuous/terraform
     ref: 8fbbaa868bfa0fd31f9add0bf97c7317becac284 # 8.0.2
     file: "templates/gitlab-ci-terraform.yml"
 
