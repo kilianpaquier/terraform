@@ -70,7 +70,6 @@ module "gitlab_semantic-release-backmerge" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.semantic-release-backmerge.id
 
   # mirror = {

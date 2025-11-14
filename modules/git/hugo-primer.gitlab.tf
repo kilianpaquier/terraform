@@ -65,7 +65,6 @@ module "gitlab_hugo-primer" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.hugo-primer.id
 
   mirror = {

@@ -47,10 +47,6 @@ variable "mirror" {
   nullable = true
 }
 
-variable "owner" {
-  type = string
-}
-
 variable "repository" {
   type = string
 }

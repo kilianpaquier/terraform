@@ -66,7 +66,6 @@ module "gitlab_terraform" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.terraform.id
 
   environments = [

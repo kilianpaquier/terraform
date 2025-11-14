@@ -24,10 +24,6 @@ variable "mirror" {
   nullable = true
 }
 
-variable "owner" {
-  type = string
-}
-
 variable "project" {
   type = string
 }

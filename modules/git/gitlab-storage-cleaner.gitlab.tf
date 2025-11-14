@@ -70,7 +70,6 @@ module "gitlab_gitlab-storage-cleaner" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.gitlab-storage-cleaner.id
 
   # mirror = {

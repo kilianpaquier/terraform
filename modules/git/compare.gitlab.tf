@@ -65,7 +65,6 @@ module "gitlab_compare" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.compare.id
 
   mirror = {

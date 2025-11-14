@@ -62,7 +62,6 @@ module "gitlab_zsh-plugins" {
   depends_on = [github_repository.zsh-plugins, gitlab_project.zsh-plugins]
   source     = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.zsh-plugins.id
 
   mirror = {

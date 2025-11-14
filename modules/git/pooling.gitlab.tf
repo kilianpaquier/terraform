@@ -65,7 +65,6 @@ module "gitlab_pooling" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.pooling.id
 
   mirror = {

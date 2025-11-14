@@ -1,4 +1,6 @@
 # TF_VAR_codecov_token
+# not yet used (or used as environment variable)
+# tflint-ignore: terraform_unused_declarations
 variable "codecov_token" {
   sensitive = true
   type      = string
@@ -19,6 +21,8 @@ variable "netlify_auth_token" {
 }
 
 # TF_VAR_renovate_token
+# used as environment variable (will be removed soon)
+# tflint-ignore: terraform_unused_declarations
 variable "renovate_token" {
   sensitive = true
   type      = string

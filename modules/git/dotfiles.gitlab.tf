@@ -65,7 +65,6 @@ module "gitlab_dotfiles" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.dotfiles.id
 
   mirror = {

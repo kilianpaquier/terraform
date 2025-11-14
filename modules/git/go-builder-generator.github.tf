@@ -55,7 +55,7 @@ module "go-builder-generator" {
     gitlab_group_access_token.access_tokens["mirror"],
     gitlab_project.go-builder-generator
   ]
-  source     = "./github"
+  source = "./github"
 
   owner      = local.owner
   repository = github_repository.go-builder-generator.name

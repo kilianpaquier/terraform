@@ -62,7 +62,6 @@ module "gitlab_website" {
   depends_on = [github_repository.website, gitlab_project.website]
   source     = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.website.id
 
   mirror = {

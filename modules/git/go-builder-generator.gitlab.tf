@@ -70,7 +70,6 @@ module "gitlab_go-builder-generator" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.go-builder-generator.id
 
   # mirror = {

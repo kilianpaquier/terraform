@@ -65,7 +65,6 @@ module "gitlab_renovate" {
   ]
   source = "./gitlab"
 
-  owner   = local.owner
   project = gitlab_project.renovate.id
 
   variables = [
