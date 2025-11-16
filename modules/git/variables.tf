@@ -6,6 +6,30 @@ variable "codecov_token" {
   type      = string
 }
 
+# TF_VAR_github_com_token
+variable "github_com_token" {
+  sensitive = true
+  type      = string
+}
+
+# TF_VAR_github_mirror_token
+variable "github_mirror_token" {
+  sensitive = true
+  type      = string
+}
+
+# TF_VAR_github_terraform_token
+variable "github_terraform_token" {
+  sensitive = true
+  type      = string
+}
+
+# TF_VAR_gitlab_terraform_token
+variable "gitlab_terraform_token" {
+  sensitive = true
+  type      = string
+}
+
 # TF_VAR_kickr_private_key
 # used as environment variable
 # tflint-ignore: terraform_unused_declarations
@@ -24,24 +48,6 @@ variable "netlify_auth_token" {
 # used as environment variable (will be removed soon)
 # tflint-ignore: terraform_unused_declarations
 variable "renovate_token" {
-  sensitive = true
-  type      = string
-}
-
-# TF_VAR_github_terraform_token
-variable "github_terraform_token" {
-  sensitive = true
-  type      = string
-}
-
-# TF_VAR_gitlab_terraform_token
-variable "gitlab_terraform_token" {
-  sensitive = true
-  type      = string
-}
-
-# TF_VAR_github_mirror_token
-variable "github_mirror_token" {
   sensitive = true
   type      = string
 }

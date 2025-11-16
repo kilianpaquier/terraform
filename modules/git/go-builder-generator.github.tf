@@ -77,7 +77,7 @@ module "go-builder-generator" {
     {
       environment        = "renovate"
       protected_branches = true
-      secrets            = [{ secret_name = "RENOVATE_TOKE", from = "TF_VAR_renovate_token" }]
+      secrets            = [{ secret_name = "RENOVATE_TOKEN", from = "TF_VAR_renovate_token" }]
     }
   ]
   secrets = [{ secret_name = "CODECOV_TOKEN", from = "TF_VAR_codecov_token" }]

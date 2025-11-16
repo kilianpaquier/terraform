@@ -82,11 +82,18 @@ module "gitlab_terraform" {
           value       = "$${CODECOV_TOKEN}"
         },
         {
-          key         = "TF_VAR_gitlab_terraform_token"
-          description = "Terraform GitLab token to apply resources"
+          key         = "TF_VAR_github_com_token"
+          description = "GitHub token to retrieve release notes associated with versions updates"
+          raw         = true
+          sensitive   = true
+          value       = sensitive(var.github_com_token)
+        },
+        {
+          key         = "TF_VAR_github_mirror_token"
+          description = "Mirroring GitHub token to push repositories updates onto"
           sensitive   = true
           raw         = true
-          value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
+          value       = sensitive(var.github_mirror_token)
         },
         {
           key         = "TF_VAR_github_terraform_token"
@@ -96,11 +103,11 @@ module "gitlab_terraform" {
           value       = sensitive(var.github_terraform_token)
         },
         {
-          key         = "TF_VAR_github_mirror_token"
-          description = "Mirroring GitHub token to push repositories updates onto"
+          key         = "TF_VAR_gitlab_terraform_token"
+          description = "Terraform GitLab token to apply resources"
           sensitive   = true
           raw         = true
-          value       = sensitive(var.github_mirror_token)
+          value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
         }
       ]
     }
