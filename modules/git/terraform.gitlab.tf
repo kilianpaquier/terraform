@@ -64,8 +64,7 @@ module "gitlab_terraform" {
     gitlab_group_service_account_access_token.access_tokens["terraform"],
     gitlab_project.terraform
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.terraform.id
 
   environments = [
@@ -106,6 +105,7 @@ module "gitlab_terraform" {
       ]
     }
   ]
+
 
   mirror = {
     token = sensitive(var.github_mirror_token)

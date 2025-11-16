@@ -52,10 +52,9 @@ resource "github_branch_protection" "compare" {
 module "compare" {
   depends_on = [github_repository.compare]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.compare.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

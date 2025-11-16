@@ -2,9 +2,10 @@ resource "github_repository" "website" {
   name        = "website"
   description = "Personal portfolio"
 
-  has_downloads = false
-  has_issues    = false
-  homepage_url  = "https://kilianpaquier.dev"
+  has_discussions = true
+  has_downloads   = false
+  has_issues      = false
+  homepage_url    = "https://kilianpaquier.dev"
 
   allow_auto_merge   = false
   allow_merge_commit = false
@@ -52,10 +53,9 @@ resource "github_branch_protection" "website" {
 module "website" {
   depends_on = [github_repository.website]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.website.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

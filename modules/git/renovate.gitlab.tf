@@ -58,13 +58,23 @@ resource "gitlab_project" "renovate" {
   resolve_outdated_diff_discussions = false
 }
 
+resource "gitlab_pipeline_schedule" "renovate" {
+  project = gitlab_project.renovate.id
+
+  active         = true
+  cron           = "0 12 * * *"
+  cron_timezone  = "Europe/Paris"
+  description    = "Scheduled pipeline for Renovate maintainance"
+  ref            = "refs/heads/main"
+  take_ownership = true
+}
+
 module "gitlab_renovate" {
   depends_on = [
     gitlab_group_access_token.access_tokens["renovate"],
     gitlab_project.renovate
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.renovate.id
 
   variables = [

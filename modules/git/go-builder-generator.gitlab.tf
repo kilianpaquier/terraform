@@ -68,8 +68,7 @@ module "gitlab_go-builder-generator" {
     github_repository.go-builder-generator,
     gitlab_project.go-builder-generator
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.go-builder-generator.id
 
   # mirror = {

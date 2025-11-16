@@ -51,10 +51,9 @@ resource "github_branch_protection" "dotfiles" {
 module "dotfiles" {
   depends_on = [github_repository.dotfiles]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.dotfiles.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

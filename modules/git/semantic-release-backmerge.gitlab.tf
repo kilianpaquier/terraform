@@ -68,8 +68,7 @@ module "gitlab_semantic-release-backmerge" {
     github_repository.semantic-release-backmerge,
     gitlab_project.semantic-release-backmerge
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.semantic-release-backmerge.id
 
   # mirror = {

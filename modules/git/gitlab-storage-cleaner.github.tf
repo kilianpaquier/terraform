@@ -55,11 +55,10 @@ module "gitlab-storage-cleaner" {
     gitlab_group_access_token.access_tokens["mirror"],
     gitlab_project.gitlab-storage-cleaner
   ]
-  source = "./github"
-
-  owner      = local.owner
+  source     = "./github"
   repository = github_repository.gitlab-storage-cleaner.name
 
+  labels = module.shared.labels
   mirror = {
     secret = sensitive(gitlab_group_access_token.access_tokens["mirror"].token)
     url    = "${local.gitlab_api_v4}/projects/${gitlab_project.gitlab-storage-cleaner.id}/mirror/pull"

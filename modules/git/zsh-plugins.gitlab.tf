@@ -61,8 +61,7 @@ resource "gitlab_project" "zsh-plugins" {
 module "gitlab_zsh-plugins" {
   depends_on = [github_repository.zsh-plugins, gitlab_project.zsh-plugins]
   source     = "./gitlab"
-
-  project = gitlab_project.zsh-plugins.id
+  project    = gitlab_project.zsh-plugins.id
 
   mirror = {
     token = sensitive(var.github_mirror_token)

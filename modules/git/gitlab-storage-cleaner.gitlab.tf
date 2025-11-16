@@ -68,8 +68,7 @@ module "gitlab_gitlab-storage-cleaner" {
     github_repository.gitlab-storage-cleaner,
     gitlab_project.gitlab-storage-cleaner
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.gitlab-storage-cleaner.id
 
   # mirror = {

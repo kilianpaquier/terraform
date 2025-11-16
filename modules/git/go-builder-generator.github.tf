@@ -55,11 +55,10 @@ module "go-builder-generator" {
     gitlab_group_access_token.access_tokens["mirror"],
     gitlab_project.go-builder-generator
   ]
-  source = "./github"
-
-  owner      = local.owner
+  source     = "./github"
   repository = github_repository.go-builder-generator.name
 
+  labels = module.shared.labels
   mirror = {
     secret = sensitive(gitlab_group_access_token.access_tokens["mirror"].token)
     url    = "${local.gitlab_api_v4}/projects/${gitlab_project.go-builder-generator.id}/mirror/pull"

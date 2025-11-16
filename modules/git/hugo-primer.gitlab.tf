@@ -63,8 +63,7 @@ module "gitlab_hugo-primer" {
     github_repository.hugo-primer,
     gitlab_project.hugo-primer
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.hugo-primer.id
 
   mirror = {

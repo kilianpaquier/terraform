@@ -63,8 +63,7 @@ module "gitlab_pooling" {
     github_repository.pooling,
     gitlab_project.pooling
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.pooling.id
 
   mirror = {

@@ -15,6 +15,15 @@ variable "environments" {
   default = []
 }
 
+variable "labels" {
+  type = list(object({
+    name        = string
+    color       = string
+    description = string
+  }))
+  default = []
+}
+
 variable "mirror" {
   type = object({
     token = string

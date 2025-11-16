@@ -63,8 +63,7 @@ module "gitlab_compare" {
     github_repository.compare,
     gitlab_project.compare
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.compare.id
 
   mirror = {

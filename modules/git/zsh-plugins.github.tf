@@ -51,10 +51,9 @@ resource "github_branch_protection" "zsh-plugins" {
 module "zsh-plugins" {
   depends_on = [github_repository.zsh-plugins]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.zsh-plugins.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

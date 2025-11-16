@@ -52,10 +52,9 @@ resource "github_branch_protection" "pooling" {
 module "pooling" {
   depends_on = [github_repository.pooling]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.pooling.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

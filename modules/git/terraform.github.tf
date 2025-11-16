@@ -52,10 +52,9 @@ resource "github_branch_protection" "terraform" {
 module "github_terraform" {
   depends_on = [github_repository.terraform]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.terraform.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

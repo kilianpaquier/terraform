@@ -53,10 +53,9 @@ resource "github_branch_protection" "hugo-primer" {
 module "hugo-primer" {
   depends_on = [github_repository.hugo-primer]
   source     = "./github"
-
-  owner      = local.owner
   repository = github_repository.hugo-primer.name
 
   actions_disabled = true
   default_branch   = "main"
+  labels           = module.shared.labels
 }

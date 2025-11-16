@@ -63,8 +63,7 @@ module "gitlab_dotfiles" {
     github_repository.dotfiles,
     gitlab_project.dotfiles
   ]
-  source = "./gitlab"
-
+  source  = "./gitlab"
   project = gitlab_project.dotfiles.id
 
   mirror = {
