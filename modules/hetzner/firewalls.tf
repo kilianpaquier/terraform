@@ -42,7 +42,7 @@ resource "hcloud_firewall" "ssh" {
   rule {
     description = "Allow private SSH port"
     direction   = "in"
-    port        = tostring(var.ssh_port)
+    port        = var.ssh_port
     protocol    = "tcp"
     source_ips = [
       "0.0.0.0/0",

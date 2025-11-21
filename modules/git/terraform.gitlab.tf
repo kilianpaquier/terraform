@@ -76,6 +76,16 @@ module "gitlab_terraform" {
       tier        = "production"
 
       variables = [
+        # GitHub
+        {
+          key         = "TF_VAR_github_terraform_token"
+          description = "Terraform GitHub token to apply resources"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.github_terraform_token)
+        },
+
+        # GitLab
         {
           key         = "TF_VAR_codecov_token"
           description = gitlab_group_variable.variables["CODECOV_TOKEN"].description
@@ -105,13 +115,6 @@ module "gitlab_terraform" {
           value       = sensitive(var.github_mirror_token)
         },
         {
-          key         = "TF_VAR_github_terraform_token"
-          description = "Terraform GitHub token to apply resources"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.github_terraform_token)
-        },
-        {
           key         = "TF_VAR_gitlab_terraform_token"
           description = "Terraform GitLab token to apply resources"
           sensitive   = true
@@ -119,11 +122,41 @@ module "gitlab_terraform" {
           value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
         },
         {
+          key         = "TF_VAR_kickr_private_key"
+          description = "Private Kickr App SSH key to commit with signature on GitHub (for kickr auto layout)"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.kickr_private_key)
+        },
+        {
+          key         = "TF_VAR_netlify_auth_token"
+          description = "Netlify token needed for static website deployed on that platform"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.netlify_auth_token)
+        },
+        {
+          key         = "TF_VAR_renovate_token"
+          description = "Renovate token needed for versions maintainance in this group"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.renovate_token)
+        },
+
+        # Hetzner
+        {
           key         = "TF_VAR_hcloud_token"
           description = "Terraform Hetzner token to apply resources"
           sensitive   = true
           raw         = true
           value       = sensitive(var.hcloud_token)
+        },
+        {
+          key         = "TF_VAR_ssh_port"
+          description = "Private SSH port instead of well-known 22"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.ssh_port)
         }
       ]
     }

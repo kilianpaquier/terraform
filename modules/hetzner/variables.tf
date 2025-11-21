@@ -4,7 +4,8 @@ variable "hcloud_token" {
   type      = string
 }
 
+# TF_VAR_ssh_port
 variable "ssh_port" {
   sensitive = true
-  type      = number
+  type      = string
 }
