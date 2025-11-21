@@ -59,7 +59,12 @@ resource "gitlab_project" "zsh-plugins" {
 }
 
 module "gitlab_zsh-plugins" {
-  depends_on = [github_repository.zsh-plugins, gitlab_project.zsh-plugins]
+  depends_on = [
+    github_repository.zsh-plugins,
+    gitlab_group_access_token.access_tokens["release"],
+    # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
+    gitlab_project.zsh-plugins
+  ]
   source     = "./gitlab"
   project    = gitlab_project.zsh-plugins.id
 
@@ -67,4 +72,23 @@ module "gitlab_zsh-plugins" {
     token = sensitive(var.github_mirror_token)
     url   = github_repository.zsh-plugins.http_clone_url
   }
+
+  variables = [
+    # {
+    #   key         = "GITHUB_TOKEN"
+    #   description = gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"].description
+    #   protected   = true
+    #   raw         = false
+    #   sensitive   = false
+    #   value       = "$${GITHUB_MIRROR_TOKEN}"
+    # },
+    {
+      key         = "GITLAB_TOKEN"
+      description = gitlab_group_access_token.access_tokens["release"].description
+      protected   = true
+      raw         = false
+      sensitive   = false
+      value       = "$${RELEASE_TOKEN}"
+    }
+  ]
 }

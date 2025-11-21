@@ -14,7 +14,7 @@ DIR_NAME="$(realpath --relative-to="$REL" "$PWD")"
 # copied from https://gitlab.com/to-be-continuous/terraform#how-to-use-gitlab-backend-in-your-development-environment-
 
 MY_PROJECT_PATH="kilianpaquier/terraform"
-TF_STATE_NAME="$(echo "$DIR_NAME" | sha256sum | cut -c -8).production"
+TF_STATE_NAME="$(echo -n "$DIR_NAME" | sha256sum | cut -c -8).production"
 TF_HTTP_PASSWORD="$GITLAB_TOKEN"
 
 CI_API_V4_URL=https://gitlab.com/api/v4

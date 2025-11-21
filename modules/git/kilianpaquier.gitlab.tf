@@ -48,21 +48,28 @@ resource "gitlab_group" "kilianpaquier" {
 }
 
 resource "gitlab_group_access_token" "access_tokens" {
+  depends_on = [gitlab_group.kilianpaquier]
   for_each = {
     "kickr" = {
-      name         = "Kickr CICD"
+      name         = "kickr[bot]"
       description  = "Kickr token to create branches and pull requests for kickr layout maintainance purposes"
       access_level = "developer"
       scopes       = ["api", "self_rotate", "write_repository"]
     }
     "mirror" = {
-      name         = "GitHub Webhook"
+      name         = "github-webhook[bot]"
       description  = "Webhhook token for GitHub when an action is executed on a repository mirrored on GitHub"
       access_level = "maintainer"
       scopes       = ["api", "self_rotate"]
     }
+    "release" = {
+      name         = "release[bot]"
+      description  = "Release token to create releases on GitLab, push commit(s) for version files and comment on issues and pull requests"
+      access_level = "maintainer"
+      scopes       = ["api", "self_rotate", "write_repository"]
+    }
     "renovate" = {
-      name         = "Renovate CICD"
+      name         = "renovate[bot]"
       description  = "Renovate token to create branches and pull requests for versions maintainance purposes"
       access_level = "developer"
       scopes       = ["api", "self_rotate", "write_repository"]
@@ -70,7 +77,7 @@ resource "gitlab_group_access_token" "access_tokens" {
     # "terraform" = {
     #   name         = "Terraform CICD"
     #   description  = "Terraform GitLab token to apply resources"
-    #   access_level = "owner"
+    #   access_level = "terraform"
     #   scopes       = ["api", "self_rotate"]
     # }
   }
@@ -110,7 +117,10 @@ resource "gitlab_group_level_mr_approvals" "approvals" {
 }
 
 resource "gitlab_group_membership" "memberships" {
-  depends_on = [gitlab_group_service_account.service_accounts]
+  depends_on = [
+    gitlab_group_service_account.service_accounts,
+    # gitlab_member_role.terraform
+  ]
   for_each = {
     # "kickr" = {
     #   user_id      = gitlab_group_service_account.service_accounts["kickr"].service_account_id
@@ -123,12 +133,15 @@ resource "gitlab_group_membership" "memberships" {
     "terraform" = {
       user_id      = gitlab_group_service_account.service_accounts["terraform"].service_account_id
       access_level = "owner"
+      # member_role_id = gitlab_member_role.terraform.iid
     }
   }
 
-  group_id     = gitlab_group.kilianpaquier.id
-  user_id      = each.value.user_id
-  access_level = each.value.access_level
+  group_id = gitlab_group.kilianpaquier.id
+  user_id  = each.value.user_id
+
+  access_level   = each.value.access_level
+  member_role_id = lookup(each.value, "member_role_id", null)
 
   unassign_issuables_on_destroy = true
   skip_subresources_on_destroy  = false
@@ -149,7 +162,7 @@ resource "gitlab_group_service_account" "service_accounts" {
   for_each = {
     # "kickr" = { name = "Kickr", username = "kilianpaquier.kickr.bot" }
     # "renovate" = { name = "Renovate", username = "kilianpaquier.renovate.bot" }
-    "terraform" = { name = "Terraform", username = "kilianpaquier.terraform.bot" }
+    "terraform" = { name = "terraform[bot]", username = "kilianpaquier.terraform.bot" }
   }
 
   group    = gitlab_group.kilianpaquier.id
@@ -172,7 +185,7 @@ resource "gitlab_group_service_account_access_token" "access_tokens" {
     # }
     "terraform" = {
       user_id = gitlab_group_service_account.service_accounts["terraform"].service_account_id
-      name    = "Terraform CICD"
+      name    = "terraform[bot]"
       scopes  = ["api", "self_rotate"]
     }
   }
@@ -190,35 +203,36 @@ resource "gitlab_group_service_account_access_token" "access_tokens" {
 }
 
 resource "gitlab_group_variable" "variables" {
+  depends_on = [gitlab_group_access_token.access_tokens]
   for_each = { for variable in [
+    {
+      key         = "CODECOV_TOKEN"
+      description = "CodeCov access token for coverage analysis"
+      sensitive   = true
+      protected   = false
+      value       = var.codecov_token
+    },
     # {
-    #   key         = "CODECOV_TOKEN"
-    #   description = "CodeCov access token for coverage analysis"
+    #   key         = "GITHUB_MIRROR_TOKEN"
+    #   description = "Mirroring GitHub token to push repositories updates onto"
     #   sensitive   = true
-    #   protected   = false
-    #   value       = var.codecov_token
+    #   protected   = true
+    #   value       = var.github_mirror_token
     # },
     # {
     #   key         = "KICKR_TOKEN"
-    #   description = "Kickr token to create branches and pull requests for kickr layout maintainance purposes"
+    #   description = gitlab_group_access_token.access_tokens["kickr"].description
     #   sensitive   = true
     #   protected   = true
     #   value       = gitlab_group_access_token.access_tokens["kickr"].token
     # },
-    # {
-    #   key         = "NETLIFY_AUTH_TOKEN"
-    #   description = "Netlify authentication token for deployments"
-    #   sensitive   = true
-    #   protected   = false
-    #   value       = var.netlify_auth_token
-    # },
-    # {
-    #   key         = "RENOVATE_TOKEN"
-    #   description = "Renovate token to create branches and pull requests for versions maintainance purposes"
-    #   sensitive   = true
-    #   protected   = true
-    #   value       = gitlab_group_access_token.access_tokens["renovate"].token
-    # }
+    {
+      key         = "RELEASE_TOKEN"
+      description = gitlab_group_access_token.access_tokens["release"].description
+      sensitive   = true
+      protected   = true
+      value       = gitlab_group_access_token.access_tokens["release"].token
+    }
   ] : variable.key => variable }
 
   group       = gitlab_group.kilianpaquier.id
@@ -233,3 +247,27 @@ resource "gitlab_group_variable" "variables" {
   value             = sensitive(each.value.value)
   variable_type     = "env_var"
 }
+
+# resource "gitlab_member_role" "terraform" {
+#   depends_on = [gitlab_group.kilianpaquier]
+#   group_path = gitlab_group.kilianpaquier.name
+
+#   name        = "Terraform"
+#   description = "Maintainer that can do more, but yet not an Owner"
+
+#   lifecycle {
+#     ignore_changes = [enabled_permissions] # see https://gitlab.com/gitlab-org/terraform-provider-gitlab/-/merge_requests/2785
+#   }
+
+#   base_access_level = "MAINTAINER"
+#   enabled_permissions = [
+#     "ADMIN_CICD_VARIABLES",
+#     "ADMIN_GROUP_MEMBER",
+#     "ADMIN_INTEGRATIONS",
+#     # "ADMIN_PROTECTED_ENVIRONMENTS", # see https://gitlab.com/gitlab-org/terraform-provider-gitlab/-/merge_requests/2785
+#     "ARCHIVE_PROJECT",
+#     "MANAGE_DEPLOY_TOKENS",
+#     "MANAGE_GROUP_ACCESS_TOKENS",
+#     "MANAGE_MERGE_REQUEST_SETTINGS"
+#   ]
+# }

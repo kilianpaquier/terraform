@@ -61,6 +61,8 @@ resource "gitlab_project" "hugo-primer" {
 module "gitlab_hugo-primer" {
   depends_on = [
     github_repository.hugo-primer,
+    gitlab_group_access_token.access_tokens["release"],
+    # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
     gitlab_project.hugo-primer
   ]
   source  = "./gitlab"
@@ -72,6 +74,22 @@ module "gitlab_hugo-primer" {
   }
 
   variables = [
+    # {
+    #   key         = "GITHUB_TOKEN"
+    #   description = gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"].description
+    #   protected   = true
+    #   raw         = false
+    #   sensitive   = false
+    #   value       = "$${GITHUB_MIRROR_TOKEN}"
+    # },
+    {
+      key         = "GITLAB_TOKEN"
+      description = gitlab_group_access_token.access_tokens["release"].description
+      protected   = true
+      raw         = false
+      sensitive   = false
+      value       = "$${RELEASE_TOKEN}"
+    },
     {
       key         = "NETLIFY_AUTH_TOKEN"
       description = "Netlify token for deployments"

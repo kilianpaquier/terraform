@@ -62,6 +62,8 @@ module "gitlab_terraform" {
   depends_on = [
     github_repository.terraform,
     gitlab_group_service_account_access_token.access_tokens["terraform"],
+    gitlab_group_variable.variables["CODECOV_TOKEN"],
+    # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
     gitlab_project.terraform
   ]
   source  = "./gitlab"
@@ -76,7 +78,7 @@ module "gitlab_terraform" {
       variables = [
         {
           key         = "TF_VAR_codecov_token"
-          description = "CodeCov access token for coverage analysis"
+          description = gitlab_group_variable.variables["CODECOV_TOKEN"].description
           sensitive   = false
           raw         = false
           value       = "$${CODECOV_TOKEN}"
@@ -88,6 +90,13 @@ module "gitlab_terraform" {
           sensitive   = true
           value       = sensitive(var.github_com_token)
         },
+        # {
+        #   key         = "TF_VAR_github_mirror_token"
+        #   description = gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"].description
+        #   sensitive   = false
+        #   raw         = false
+        #   value       = "$${GITHUB_MIRROR_TOKEN}"
+        # },
         {
           key         = "TF_VAR_github_mirror_token"
           description = "Mirroring GitHub token to push repositories updates onto"
@@ -108,11 +117,17 @@ module "gitlab_terraform" {
           sensitive   = true
           raw         = true
           value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
+        },
+        {
+          key         = "TF_VAR_hcloud_token"
+          description = "Terraform Hetzner token to apply resources"
+          sensitive   = true
+          raw         = true
+          value       = sensitive(var.hcloud_token)
         }
       ]
     }
   ]
-
 
   mirror = {
     token = sensitive(var.github_mirror_token)

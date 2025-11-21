@@ -59,7 +59,11 @@ resource "gitlab_project" "website" {
 }
 
 module "gitlab_website" {
-  depends_on = [github_repository.website, gitlab_project.website]
+  depends_on = [
+    github_repository.website,
+    gitlab_group_access_token.access_tokens["release"],
+    gitlab_project.website
+  ]
   source     = "./gitlab"
   project    = gitlab_project.website.id
 
@@ -69,6 +73,14 @@ module "gitlab_website" {
   }
 
   variables = [
+    {
+      key         = "GITLAB_TOKEN"
+      description = gitlab_group_access_token.access_tokens["release"].description
+      protected   = true
+      raw         = false
+      sensitive   = false
+      value       = "$${RELEASE_TOKEN}"
+    },
     {
       key         = "NETLIFY_AUTH_TOKEN"
       description = "Netlify token for deployments"
