@@ -16,6 +16,12 @@ lint:
 lint-fix:
 	@ARGS="--fix" make -s lint
 
+plan-modules-hetzner:
+	@tofu -chdir=modules/hetzner plan
+
+test-modules-hetzner:
+	@tofu -chdir=modules/hetzner test
+
 plan-modules-git:
 	@tofu -chdir=modules/git plan
 

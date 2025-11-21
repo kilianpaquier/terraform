@@ -20,4 +20,5 @@ platform: gitlab
 terraform:
   engine: opentofu
   modules:
+    - modules/hetzner
     - modules/git
