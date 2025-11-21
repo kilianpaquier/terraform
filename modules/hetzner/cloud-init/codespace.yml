@@ -1,0 +1,65 @@
+#cloud-config
+
+timezone: Europe/Paris
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - fail2ban
+  - rsyslog
+  - ufw
+  - zsh
+
+users:
+  - gecos: NonRoot
+    groups: adm, docker, plugdev, sudo
+    homedir: /home/nonroot
+    name: nonroot
+    shell: /bin/zsh
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+%{ for public_key in public_keys ~}
+      - ${public_key}
+%{ endfor ~}
+
+write_files:
+  - content: |
+      [sshd]
+      enabled  = true
+      port     = ${ssh_port}
+      filter   = sshd
+      maxretry = 3
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/sshd.conf
+    permissions: "0o644"
+  - content: |
+      AllowUsers nonroot
+      AuthorizedKeysFile .ssh/authorized_keys
+      ChallengeResponseAuthentication no
+      KbdInteractiveAuthentication no
+      MaxAuthTries 3
+      PasswordAuthentication no
+      PermitRootLogin no
+      Port ${ssh_port}
+    encoding: text/plain
+    owner: root:root
+    path: /etc/ssh/sshd_config.d/cloud-init.conf
+    permissions: "0o644"
+
+runcmd:
+  - ufw default deny incoming # block all incoming requests
+  - ufw default allow outgoing # allow all outgoing requests
+
+  - ufw allow ${ssh_port}/tcp # allow specific ssh port
+  - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
+
+  # limit exposed connections between docker containers
+  - ufw allow in on docker0 to any port 80,443 proto tcp
+  - ufw allow out on docker0
+
+  - ufw --force enable
+  - systemctl restart fail2ban sshd
