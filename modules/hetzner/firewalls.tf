@@ -1,56 +1,38 @@
-resource "hcloud_firewall" "http" {
-  name = "http"
+resource "hcloud_firewall" "incomings" {
+  for_each = {
+    for firewall in [
+      {
+        description = "Allow HTTP port"
+        name        = "http"
+        port        = 80
+      },
+      {
+        description = "Allow HTTPS port"
+        name        = "https"
+        port        = 443
+      },
+      {
+        description = "Allow private SSH port"
+        name        = "ssh"
+        port        = var.ssh_port
+      }
+    ] : firewall.name => firewall
+  }
+
+  name = each.value.name
 
   rule {
-    description = "Allow HTTP port"
+    description = each.value.description
     direction   = "in"
-    port        = "80"
+    port        = each.value.port
     protocol    = "tcp"
-    source_ips = [
+    source_ips = lookup(each.value, "source_ips", [
       "0.0.0.0/0",
       "::/0"
-    ]
+    ])
   }
 
   apply_to {
-    label_selector = "http"
-  }
-}
-
-resource "hcloud_firewall" "https" {
-  name = "https"
-
-  rule {
-    description = "Allow HTTPS port"
-    direction   = "in"
-    port        = "443"
-    protocol    = "tcp"
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-  apply_to {
-    label_selector = "https"
-  }
-}
-
-resource "hcloud_firewall" "ssh" {
-  name = "ssh"
-
-  rule {
-    description = "Allow private SSH port"
-    direction   = "in"
-    port        = var.ssh_port
-    protocol    = "tcp"
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-  apply_to {
-    label_selector = "ssh"
+    label_selector = each.value.name
   }
 }
