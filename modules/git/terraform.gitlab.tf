@@ -61,6 +61,7 @@ resource "gitlab_project" "terraform" {
 module "gitlab_terraform" {
   depends_on = [
     github_repository.terraform,
+    gitlab_group_service_account_access_token.access_tokens["renovate"],
     gitlab_group_service_account_access_token.access_tokens["terraform"],
     gitlab_group_variable.variables["CODECOV_TOKEN"],
     # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
@@ -121,13 +122,13 @@ module "gitlab_terraform" {
           raw         = true
           value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
         },
-        {
-          key         = "TF_VAR_kickr_private_key"
-          description = "Private Kickr App SSH key to commit with signature on GitHub (for kickr auto layout)"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.kickr_private_key)
-        },
+        # {
+        #   key         = "TF_VAR_kickr_private_key"
+        #   description = "Private Kickr App SSH key to commit with signature on GitHub (for kickr auto layout)"
+        #   sensitive   = true
+        #   raw         = true
+        #   value       = sensitive(var.kickr_private_key)
+        # },
         {
           key         = "TF_VAR_netlify_auth_token"
           description = "Netlify token needed for static website deployed on that platform"
@@ -140,7 +141,7 @@ module "gitlab_terraform" {
           description = "Renovate token needed for versions maintainance in this group"
           sensitive   = true
           raw         = true
-          value       = sensitive(var.renovate_token)
+          value       = sensitive(gitlab_group_access_token.access_tokens["renovate"].token)
         },
 
         # Hetzner
@@ -151,13 +152,13 @@ module "gitlab_terraform" {
           raw         = true
           value       = sensitive(var.hcloud_token)
         },
-        {
-          key         = "TF_VAR_ssh_port"
-          description = "Private SSH port instead of well-known 22"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.ssh_port)
-        }
+        # {
+        #   key         = "TF_VAR_ssh_port"
+        #   description = "Private SSH port instead of well-known 22"
+        #   sensitive   = true
+        #   raw         = true
+        #   value       = sensitive(var.ssh_port)
+        # }
       ]
     }
   ]

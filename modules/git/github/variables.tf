@@ -38,7 +38,7 @@ variable "labels" {
   default = []
 }
 
-variable "mirror" {
+variable "webhook" {
   type = object({
     secret = string
     url    = string

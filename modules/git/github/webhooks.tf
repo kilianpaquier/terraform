@@ -1,5 +1,5 @@
-resource "github_repository_webhook" "mirror" {
-  count      = var.mirror != null ? 1 : 0
+resource "github_repository_webhook" "gitlab" {
+  count      = var.webhook != null ? 1 : 0
   repository = var.repository
 
   active = true
@@ -8,8 +8,8 @@ resource "github_repository_webhook" "mirror" {
   configuration {
     content_type = "application/json"
     insecure_ssl = false
-    secret       = var.mirror.secret
-    url          = var.mirror.url
+    secret       = var.webhook.secret
+    url          = var.webhook.url
   }
 }
 

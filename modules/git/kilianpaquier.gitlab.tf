@@ -1,16 +1,3 @@
-# data "gitlab_user" "user_owner" {
-#   username = "u.${local.owner}"
-# }
-
-# resource "gitlab_user_sshkey" "ssh_key" {
-#   for_each = { for k, repo in module.shared.public_keys : k => repo if k == "codespace" }
-#   user_id  = data.gitlab_user.user_owner.id
-
-#   title      = each.key
-#   key        = each.value
-#   expires_at = "2026-01-31T00:00:00.000Z"
-# }
-
 resource "gitlab_group" "kilianpaquier" {
   name        = "kilianpaquier"
   path        = "kilianpaquier"
@@ -56,12 +43,6 @@ resource "gitlab_group_access_token" "access_tokens" {
       access_level = "developer"
       scopes       = ["api", "self_rotate", "write_repository"]
     }
-    "mirror" = {
-      name         = "github-webhook[bot]"
-      description  = "Webhhook token for GitHub when an action is executed on a repository mirrored on GitHub"
-      access_level = "maintainer"
-      scopes       = ["api", "self_rotate"]
-    }
     "release" = {
       name         = "release[bot]"
       description  = "Release token to create releases on GitLab, push commit(s) for version files and comment on issues and pull requests"
@@ -75,7 +56,7 @@ resource "gitlab_group_access_token" "access_tokens" {
       scopes       = ["api", "self_rotate", "write_repository"]
     }
     # "terraform" = {
-    #   name         = "Terraform CICD"
+    #   name         = "terraform[bot]"
     #   description  = "Terraform GitLab token to apply resources"
     #   access_level = "terraform"
     #   scopes       = ["api", "self_rotate"]
@@ -160,8 +141,8 @@ resource "gitlab_group_protected_environment" "environments" {
 resource "gitlab_group_service_account" "service_accounts" {
   depends_on = [gitlab_group.kilianpaquier]
   for_each = {
-    # "kickr" = { name = "Kickr", username = "kilianpaquier.kickr.bot" }
-    # "renovate" = { name = "Renovate", username = "kilianpaquier.renovate.bot" }
+    # "kickr"     = { name = "kickr[bot]", username = "kilianpaquier.kickr.bot" }
+    # "renovate"  = { name = "renovate[bot]", username = "kilianpaquier.renovate.bot" }
     "terraform" = { name = "terraform[bot]", username = "kilianpaquier.terraform.bot" }
   }
 
@@ -175,12 +156,12 @@ resource "gitlab_group_service_account_access_token" "access_tokens" {
   for_each = {
     # "kickr" = {
     #   user_id = gitlab_group_service_account.service_accounts["kickr"].service_account_id
-    #   name    = "Kickr CICD"
+    #   name    = "kickr[bot]"
     #   scopes  = ["api", "self_rotate", "write_repository"]
     # }
     # "renovate" = {
     #   user_id = gitlab_group_service_account.service_accounts["renovate"].service_account_id
-    #   name    = "Renovate CICD"
+    #   name    = "renovate[bot]"
     #   scopes  = ["api", "self_rotate", "write_repository"]
     # }
     "terraform" = {
@@ -213,13 +194,6 @@ resource "gitlab_group_variable" "variables" {
       value       = var.codecov_token
     },
     # {
-    #   key         = "GITHUB_MIRROR_TOKEN"
-    #   description = "Mirroring GitHub token to push repositories updates onto"
-    #   sensitive   = true
-    #   protected   = true
-    #   value       = var.github_mirror_token
-    # },
-    # {
     #   key         = "KICKR_TOKEN"
     #   description = gitlab_group_access_token.access_tokens["kickr"].description
     #   sensitive   = true
@@ -247,27 +221,3 @@ resource "gitlab_group_variable" "variables" {
   value             = sensitive(each.value.value)
   variable_type     = "env_var"
 }
-
-# resource "gitlab_member_role" "terraform" {
-#   depends_on = [gitlab_group.kilianpaquier]
-#   group_path = gitlab_group.kilianpaquier.name
-
-#   name        = "Terraform"
-#   description = "Maintainer that can do more, but yet not an Owner"
-
-#   lifecycle {
-#     ignore_changes = [enabled_permissions] # see https://gitlab.com/gitlab-org/terraform-provider-gitlab/-/merge_requests/2785
-#   }
-
-#   base_access_level = "MAINTAINER"
-#   enabled_permissions = [
-#     "ADMIN_CICD_VARIABLES",
-#     "ADMIN_GROUP_MEMBER",
-#     "ADMIN_INTEGRATIONS",
-#     # "ADMIN_PROTECTED_ENVIRONMENTS", # see https://gitlab.com/gitlab-org/terraform-provider-gitlab/-/merge_requests/2785
-#     "ARCHIVE_PROJECT",
-#     "MANAGE_DEPLOY_TOKENS",
-#     "MANAGE_GROUP_ACCESS_TOKENS",
-#     "MANAGE_MERGE_REQUEST_SETTINGS"
-#   ]
-# }

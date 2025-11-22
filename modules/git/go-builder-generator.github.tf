@@ -52,20 +52,14 @@ resource "github_branch_protection" "go-builder-generator" {
 module "go-builder-generator" {
   depends_on = [
     github_repository.go-builder-generator,
-    gitlab_group_access_token.access_tokens["mirror"],
     gitlab_project.go-builder-generator
   ]
   source     = "./github"
   repository = github_repository.go-builder-generator.name
 
-  labels = module.shared.labels
-  mirror = {
-    secret = sensitive(gitlab_group_access_token.access_tokens["mirror"].token)
-    url    = "${local.gitlab_api_v4}/projects/${gitlab_project.go-builder-generator.id}/mirror/pull"
-  }
-
   actions_disabled = false
   default_branch   = "main"
+  labels = module.shared.labels
 
   environments = [
     {

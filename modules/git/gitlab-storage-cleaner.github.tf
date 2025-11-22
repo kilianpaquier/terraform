@@ -52,20 +52,14 @@ resource "github_branch_protection" "gitlab-storage-cleaner" {
 module "gitlab-storage-cleaner" {
   depends_on = [
     github_repository.gitlab-storage-cleaner,
-    gitlab_group_access_token.access_tokens["mirror"],
     gitlab_project.gitlab-storage-cleaner
   ]
   source     = "./github"
   repository = github_repository.gitlab-storage-cleaner.name
 
-  labels = module.shared.labels
-  mirror = {
-    secret = sensitive(gitlab_group_access_token.access_tokens["mirror"].token)
-    url    = "${local.gitlab_api_v4}/projects/${gitlab_project.gitlab-storage-cleaner.id}/mirror/pull"
-  }
-
   actions_disabled = false
   default_branch   = "main"
+  labels = module.shared.labels
 
   environments = [
     { environment = "docker" },

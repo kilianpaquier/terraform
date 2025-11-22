@@ -17,6 +17,7 @@ resource "gitlab_project" "go-builder-generator" {
   mirror                              = true
   mirror_overwrites_diverged_branches = true
   mirror_trigger_builds               = true
+  only_mirror_protected_branches      = true
 
   analytics_access_level               = "disabled"
   builds_access_level                  = "enabled"
