@@ -10,6 +10,7 @@
         "github>kickr-dev/renovate//configs/renovate/gitlab-ci.json",
         "github>kickr-dev/renovate//configs/renovate/gomod.json",
         "github>kickr-dev/renovate//configs/renovate/kickr.json",
+        "github>kickr-dev/renovate//configs/renovate/opentofu.json",
         "github>kickr-dev/renovate//configs/renovate/pre-commit.json"
     ]
 }
