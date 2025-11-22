@@ -113,8 +113,9 @@ resource "gitlab_group_membership" "memberships" {
     # }
     "terraform" = {
       user_id      = gitlab_group_service_account.service_accounts["terraform"].service_account_id
+      # cannot have a custom role between Maintainer and Owner because there's no scope to rotate or create its own tokens
+      # cannot be just a Group Access Token because a custom role cannot be assigned to that and Group Access Token(s) (even Owner) cannot rotate or create Group Access Token(s)
       access_level = "owner"
-      # member_role_id = gitlab_member_role.terraform.iid
     }
   }
 
