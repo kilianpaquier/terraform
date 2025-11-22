@@ -5,6 +5,8 @@ variable "hcloud_token" {
 }
 
 # TF_VAR_ssh_port
+# used in Hetzner provisioning but not yet in Git one
+# tflint-ignore: terraform_unused_declarations
 variable "ssh_port" {
   sensitive = true
   type      = string

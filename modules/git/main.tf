@@ -3,9 +3,7 @@ terraform {
 }
 
 locals {
-  owner         = "kilianpaquier"
-  gitlab_url    = "https://gitlab.com"
-  gitlab_api_v4 = "${local.gitlab_url}/api/v4"
+  owner = "kilianpaquier"
 }
 
 provider "external" {}
@@ -16,8 +14,7 @@ provider "github" {
 }
 
 provider "gitlab" {
-  base_url = local.gitlab_url
-  token    = var.gitlab_terraform_token
+  token = var.gitlab_terraform_token
 }
 
 module "shared" {
