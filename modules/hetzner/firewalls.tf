@@ -14,7 +14,7 @@ resource "hcloud_firewall" "incomings" {
       {
         description = "Allow private SSH port"
         name        = "ssh"
-        port        = var.ssh_port
+        port        = data.sops_file.sops["hetzner"].data["ssh_port"]
       }
     ] : firewall.name => firewall
   }

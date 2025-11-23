@@ -84,7 +84,7 @@ module "gitlab_renovate" {
       protected   = true
       raw         = true
       sensitive   = true
-      value       = sensitive(var.github_com_token)
+      value       = sensitive(data.sops_file.sops["gitlab"].data["github_com_token"])
     },
     {
       key         = "RENOVATE_TOKEN"

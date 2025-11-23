@@ -68,7 +68,7 @@ module "gitlab_website" {
   project    = gitlab_project.website.id
 
   mirror = {
-    token = sensitive(var.github_mirror_token)
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.website.http_clone_url
   }
 
@@ -86,7 +86,7 @@ module "gitlab_website" {
       description = "Netlify token for deployments"
       raw         = true
       sensitive   = true
-      value       = sensitive(var.netlify_auth_token)
+      value       = sensitive(data.sops_file.sops["gitlab"].data["netlify_auth_token"])
     },
     {
       key         = "NETLIFY_SITE_ID"

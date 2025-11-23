@@ -61,10 +61,6 @@ resource "gitlab_project" "terraform" {
 module "gitlab_terraform" {
   depends_on = [
     github_repository.terraform,
-    gitlab_group_service_account_access_token.access_tokens["renovate"],
-    gitlab_group_service_account_access_token.access_tokens["terraform"],
-    gitlab_group_variable.variables["CODECOV_TOKEN"],
-    # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
     gitlab_project.terraform
   ]
   source  = "./gitlab"
@@ -75,96 +71,11 @@ module "gitlab_terraform" {
       environment = "production"
       description = "Terraform production environment (state separation)"
       tier        = "production"
-
-      variables = [
-        # GitHub
-        {
-          key         = "TF_VAR_github_terraform_token"
-          description = "Terraform GitHub token to apply resources"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.github_terraform_token)
-        },
-
-        # GitLab
-        {
-          key         = "TF_VAR_codecov_token"
-          description = gitlab_group_variable.variables["CODECOV_TOKEN"].description
-          sensitive   = false
-          raw         = false
-          value       = "$${CODECOV_TOKEN}"
-        },
-        {
-          key         = "TF_VAR_github_com_token"
-          description = "GitHub token to retrieve release notes associated with versions updates"
-          raw         = true
-          sensitive   = true
-          value       = sensitive(var.github_com_token)
-        },
-        # {
-        #   key         = "TF_VAR_github_mirror_token"
-        #   description = gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"].description
-        #   sensitive   = false
-        #   raw         = false
-        #   value       = "$${GITHUB_MIRROR_TOKEN}"
-        # },
-        {
-          key         = "TF_VAR_github_mirror_token"
-          description = "Mirroring GitHub token to push repositories updates onto"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.github_mirror_token)
-        },
-        {
-          key         = "TF_VAR_gitlab_terraform_token"
-          description = "Terraform GitLab token to apply resources"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(gitlab_group_service_account_access_token.access_tokens["terraform"].token)
-        },
-        # {
-        #   key         = "TF_VAR_kickr_private_key"
-        #   description = "Private Kickr App SSH key to commit with signature on GitHub (for kickr auto layout)"
-        #   sensitive   = true
-        #   raw         = true
-        #   value       = sensitive(var.kickr_private_key)
-        # },
-        {
-          key         = "TF_VAR_netlify_auth_token"
-          description = "Netlify token needed for static website deployed on that platform"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.netlify_auth_token)
-        },
-        {
-          key         = "TF_VAR_renovate_token"
-          description = "Renovate token needed for versions maintainance in this group"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(gitlab_group_access_token.access_tokens["renovate"].token)
-        },
-
-        # Hetzner
-        {
-          key         = "TF_VAR_hcloud_token"
-          description = "Terraform Hetzner token to apply resources"
-          sensitive   = true
-          raw         = true
-          value       = sensitive(var.hcloud_token)
-        },
-        # {
-        #   key         = "TF_VAR_ssh_port"
-        #   description = "Private SSH port instead of well-known 22"
-        #   sensitive   = true
-        #   raw         = true
-        #   value       = sensitive(var.ssh_port)
-        # }
-      ]
     }
   ]
 
   mirror = {
-    token = sensitive(var.github_mirror_token)
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.terraform.http_clone_url
   }
 }

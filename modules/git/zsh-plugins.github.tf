@@ -3,7 +3,7 @@ resource "github_repository" "zsh-plugins" {
   description = "A bunch of ZSH plugins that also acts as installation plugins to avoid running an installation script"
 
   has_downloads = false
-  has_issues    = false
+  has_issues    = true
 
   allow_auto_merge   = false
   allow_merge_commit = false

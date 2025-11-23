@@ -73,7 +73,7 @@ module "gitlab_go-builder-generator" {
   project = gitlab_project.go-builder-generator.id
 
   # mirror = {
-  #   token = sensitive(var.github_mirror_token)
+  #   token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
   #   url   = github_repository.go-builder-generator.http_clone_url
   # }
 }

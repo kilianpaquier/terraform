@@ -62,26 +62,17 @@ module "gitlab_compare" {
   depends_on = [
     github_repository.compare,
     gitlab_group_access_token.access_tokens["release"],
-    # gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"],
     gitlab_project.compare
   ]
   source  = "./gitlab"
   project = gitlab_project.compare.id
 
   mirror = {
-    token = sensitive(var.github_mirror_token)
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.compare.http_clone_url
   }
 
   variables = [
-    # {
-    #   key         = "GITHUB_TOKEN"
-    #   description = gitlab_group_variable.variables["GITHUB_MIRROR_TOKEN"].description
-    #   protected   = true
-    #   raw         = false
-    #   sensitive   = false
-    #   value       = "$${GITHUB_MIRROR_TOKEN}"
-    # },
     {
       key         = "GITLAB_TOKEN"
       description = gitlab_group_access_token.access_tokens["release"].description

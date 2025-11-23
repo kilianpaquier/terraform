@@ -17,7 +17,7 @@
 #   ssh_keys = [for key in module.shared.public_keys : key]
 
 #   user_data = templatefile("${path.module}/cloud-init/codespace.yml", {
-#     ssh_port    = var.ssh_port
+#     ssh_port    = data.sops_file.sops["hetzner"].data["ssh_port"]
 #     public_keys = [for key, value in module.shared.public_keys : value]
 #   })
 

@@ -14,6 +14,7 @@ variable "environments" {
       secret_name     = string
       from            = optional(string, null)
       encrypted_value = optional(string, null)
+      plaintext_value = optional(string, null)
     })), [])
 
     variables = optional(list(object({
@@ -56,6 +57,7 @@ variable "secrets" {
     secret_name     = string
     from            = optional(string, null)
     encrypted_value = optional(string, null)
+    plaintext_value = optional(string, null)
   }))
   default = []
 }

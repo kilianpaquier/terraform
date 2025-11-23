@@ -65,9 +65,9 @@ module "semantic-release-backmerge" {
     {
       environment        = "kickr"
       protected_branches = true
-      secrets            = [{ secret_name = "KICKR_PRIVATE_KEY", from = "TF_VAR_kickr_private_key" }]
+      secrets            = [{ secret_name = "KICKR_PRIVATE_KEY", plaintext_value = data.sops_file.sops["github"].data["kickr_private_key"] }]
     },
     { environment = "release", protected_branches = true }
   ]
-  secrets = [{ secret_name = "CODECOV_TOKEN", from = "TF_VAR_codecov_token" }]
+  secrets = [{ secret_name = "CODECOV_TOKEN", plaintext_value = data.sops_file.sops["gitlab"].data["codecov_token"] }]
 }

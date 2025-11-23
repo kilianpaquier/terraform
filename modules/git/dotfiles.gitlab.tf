@@ -67,7 +67,7 @@ module "gitlab_dotfiles" {
   project = gitlab_project.dotfiles.id
 
   mirror = {
-    token = sensitive(var.github_mirror_token)
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.dotfiles.http_clone_url
   }
 }

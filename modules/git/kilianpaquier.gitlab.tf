@@ -98,10 +98,7 @@ resource "gitlab_group_level_mr_approvals" "approvals" {
 }
 
 resource "gitlab_group_membership" "memberships" {
-  depends_on = [
-    gitlab_group_service_account.service_accounts,
-    # gitlab_member_role.terraform
-  ]
+  depends_on = [gitlab_group_service_account.service_accounts]
   for_each = {
     # "kickr" = {
     #   user_id      = gitlab_group_service_account.service_accounts["kickr"].service_account_id
@@ -192,7 +189,7 @@ resource "gitlab_group_variable" "variables" {
       description = "CodeCov access token for coverage analysis"
       sensitive   = true
       protected   = false
-      value       = var.codecov_token
+      value       = data.sops_file.sops["gitlab"].data["codecov_token"]
     },
     # {
     #   key         = "KICKR_TOKEN"

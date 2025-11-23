@@ -9,12 +9,17 @@ terraform {
 
     github = {
       source  = "integrations/github"
-      version = "6.8.0"
+      version = "6.8.3"
     }
 
     gitlab = {
       source  = "gitlabhq/gitlab"
-      version = "18.5.0"
+      version = "18.6.1"
+    }
+
+    sops = {
+      source  = "carlpett/sops"
+      version = "1.3.0"
     }
   }
 }
