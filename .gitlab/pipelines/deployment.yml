@@ -13,7 +13,8 @@ variables:
 
   TF_IMAGE: ghcr.io/opentofu/opentofu:latest
   TF_TFLINT_ARGS: --config "$CI_PROJECT_DIR/.tflint.hcl" --recursive
-  TF_TRIVY_DISABLED: "true"
+  TF_CHECKOV_ENABLED: "true"
+  TF_TRIVY_DISABLED: "false"
 
   TF_REVIEW_ENABLED: "false"
   TF_INTEG_ENABLED: "false"
