@@ -26,9 +26,12 @@ variables:
     TF_BASE_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state
   parallel:
     matrix:
-      - TF_PROJECT_DIR: modules/hetzner
-        # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
-        TF_ADDRESS: ${TF_BASE_ADDRESS}/3a0a796d.${CI_ENVIRONMENT_SLUG}
       - TF_PROJECT_DIR: modules/git
         # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
         TF_ADDRESS: ${TF_BASE_ADDRESS}/ff76aae2.${CI_ENVIRONMENT_SLUG}
+      - TF_PROJECT_DIR: modules/hetzner
+        # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
+        TF_ADDRESS: ${TF_BASE_ADDRESS}/3a0a796d.${CI_ENVIRONMENT_SLUG}
+      - TF_PROJECT_DIR: modules/ovh
+        # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
+        TF_ADDRESS: ${TF_BASE_ADDRESS}/3b1ff739.${CI_ENVIRONMENT_SLUG}

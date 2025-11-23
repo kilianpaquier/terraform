@@ -1,0 +1,219 @@
+#cloud-config
+
+timezone: Europe/Paris
+
+packages:
+  - fail2ban
+  - rsyslog
+  - ufw
+
+users:
+  - gecos: NonRoot
+    groups: docker%{ if debug ~}, adm, plugdev, sudo%{ endif }
+    homedir: /home/nonroot
+    name: nonroot
+    shell: /bin/bash
+%{ if debug ~}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+%{ for public_key in public_keys ~}
+      - ${public_key}
+%{ endfor ~}
+%{ endif ~}
+
+write_files:
+%{ if debug ~}
+  - content: |
+      [sshd]
+      enabled  = true
+      port     = ${ssh_port}
+      filter   = sshd
+      maxretry = 3
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/sshd.conf
+    permissions: "0o644"
+  - content: |
+      AllowUsers nonroot
+      AuthorizedKeysFile .ssh/authorized_keys
+      ChallengeResponseAuthentication no
+      KbdInteractiveAuthentication no
+      MaxAuthTries 3
+      PasswordAuthentication no
+      PermitRootLogin no
+      Port ${ssh_port}
+    encoding: text/plain
+    owner: root:root
+    path: /etc/ssh/sshd_config.d/cloud-init.conf
+    permissions: "0o644"
+%{ endif ~}
+
+  # fail2ban for traefik
+  - content: |
+      [Definition]
+      failregex = ^<HOST> -.*"(GET|POST).*HTTP.*" (401|403)
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/filter.d/traefik-auth.conf
+    permissions: "0o644"
+  - content: |
+      [Definition]
+      failregex = ^<HOST> -.*"(GET|POST).*HTTP.*" 404
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/filter.d/traefik-404.conf
+    permissions: "0o644"
+  - content: |
+      [traefik-auth]
+      enabled  = true
+      port     = 80,443
+      filter   = traefik-auth
+      logpath  = /var/log/traefik/access.log
+      maxretry = 5
+      findtime = 5m
+      bantime  = 30m
+
+      [traefik-404]
+      enabled  = true
+      port     = 80,443
+      filter   = traefik-404
+      logpath  = /var/log/traefik/access.log
+      maxretry = 10
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/traefik.conf
+    permissions: "0o644"
+
+  # fail2ban for the instance
+  - content: |
+      [Definition]
+      failregex = ^<HOST> -.*"(GET|POST).*HTTP.*" 404
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/filter.d/${instance}.conf
+    permissions: "0o644"
+  - content: |
+      [${instance}]
+      enabled  = true
+      port     = 80,443
+      filter   = ${instance}
+      logpath  = /var/log/${instance}/access.log
+      maxretry = 10
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/${instance}.conf
+    permissions: "0o644"
+
+  # docker configuration
+  - content: |
+      services:
+
+        traefik:
+          container_name: traefik
+          image: docker.io/traefik:v3
+          restart: unless-stopped
+          networks:
+            - traefik
+          ports:
+            - '80:80'
+            - '443:443'
+          command:
+            - --accesslog.filepath=/var/log/traefik/access.log
+            - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=ovh
+            - --certificatesresolvers.letsencrypt.acme.dnschallenge=true
+            - --certificatesresolvers.letsencrypt.acme.email=acme@${domain}
+            - --certificatesresolvers.letsencrypt.acme.storage=/etc/letsencrypt/acme.json
+            - --entrypoints.web.address=:80
+            - --entrypoints.websecure.address=:443
+            - --log.filePath=/var/log/traefik/traefik.log
+            - --log.level=INFO
+            - --ping
+            - --providers.docker.exposedByDefault=false
+          environment:
+            - OVH_APPLICATION_KEY=${ovh_application_key}
+            - OVH_APPLICATION_SECRET=${ovh_application_secret}
+            - OVH_CONSUMER_KEY=${ovh_consumer_key}
+            - OVH_ENDPOINT=${ovh_endpoint}
+          volumes:
+            - /home/nonroot/traefik/letsencrypt:/etc/letsencrypt
+            - /var/log/traefik:/var/log/traefik
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+          healthcheck:
+            test: [ "CMD", "traefik", "healthcheck", "--ping" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+        fail2ban:
+          container_name: fail2ban
+          image: crazymax/fail2ban:latest
+          restart: unless-stopped
+          network_mode: host
+          cap_add:
+            - NET_ADMIN
+            - NET_RAW
+          volumes:
+            - /etc/fail2ban:/etc/fail2ban:rw
+            - /var/log:/var/log:ro
+
+        ${instance}:
+          container_name: ${instance}
+          image: ${image}
+          restart: unless-stopped
+          networks:
+            - traefik
+          volumes:
+            - /var/log/${instance}:/var/log/nginx
+          labels:
+            - traefik.enable=true
+            - traefik.http.routers.${instance}.entrypoints=websecure
+            - traefik.http.routers.${instance}.rule=Host(`${instance}.${domain}`)
+            - traefik.http.routers.${instance}.tls.certresolver=letsencrypt
+            - traefik.http.services.${instance}.loadbalancer.server.port=80
+            # force ending /
+            - traefik.http.middlewares.force-slash.redirectregex.regex=^(https?://[^/]+)$
+            - traefik.http.middlewares.force-slash.redirectregex.replacement=$1/
+            - traefik.http.routers.${instance}.middlewares=force-slash
+          healthcheck:
+            test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+            start_period: 10s
+
+      networks:
+        traefik:
+          external: false
+    encoding: text/plain
+    owner: nonroot:nonroot
+    path: /home/nonroot/docker-compose.yml
+    permissions: "0o644"
+
+runcmd:
+  - ufw default deny incoming # block all incoming requests
+  - ufw default allow outgoing # allow all outgoing requests
+
+  - ufw allow 443/tcp # allow specific HTTPS port
+  - ufw allow 80/tcp # allow specific HTTP port
+
+%{ if debug ~}
+  - ufw allow ${ssh_port}/tcp # allow specific ssh port
+  - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
+%{ endif ~}
+
+  # limit exposed connections between docker containers
+  - ufw allow in on docker0 to any port 80,443 proto tcp
+  - ufw allow out on docker0
+
+  - ufw --force enable
+  - systemctl restart fail2ban sshd
+
+  # start all containers
+  - su - nonroot -c "docker compose up -d --wait"

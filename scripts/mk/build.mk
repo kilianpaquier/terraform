@@ -16,14 +16,20 @@ lint:
 lint-fix:
 	@ARGS="--fix" make -s lint
 
+plan-modules-git:
+	@tofu -chdir=modules/git plan
+
+test-modules-git:
+	@tofu -chdir=modules/git test
+
 plan-modules-hetzner:
 	@tofu -chdir=modules/hetzner plan
 
 test-modules-hetzner:
 	@tofu -chdir=modules/hetzner test
 
-plan-modules-git:
-	@tofu -chdir=modules/git plan
+plan-modules-ovh:
+	@tofu -chdir=modules/ovh plan
 
-test-modules-git:
-	@tofu -chdir=modules/git test
+test-modules-ovh:
+	@tofu -chdir=modules/ovh test

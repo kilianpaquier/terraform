@@ -8,3 +8,27 @@
 </p>
 
 ---
+
+## Useful resources
+
+### OVH
+
+- Gestion des applications et droits : https://www.ovh.com/manager/#/iam/api-keys
+
+#### Traefik DNS
+
+```txt
+POST: /domain/zone/kilianpaquier.dev/record
+POST: /domain/zone/kilianpaquier.dev/refresh
+DELETE: /domain/zone/kilianpaquier.dev/record/*
+```
+
+```json
+{
+  "accessRules": [
+    { "method": "POST", "path": "/domain/zone/kilianpaquier.dev/record" },
+    { "method": "DELETE", "path": "/domain/zone/kilianpaquier.dev/record/*" },
+    { "method": "POST", "path": "/domain/zone/kilianpaquier.dev/refresh" }
+  ]
+}
+```
