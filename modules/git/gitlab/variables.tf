@@ -4,6 +4,8 @@ variable "environments" {
     environment = string
     tier        = string
 
+    external_url = optional(string, null)
+
     variables = optional(list(object({
       description = string
       key         = string

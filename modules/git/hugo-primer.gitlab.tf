@@ -16,7 +16,7 @@ resource "gitlab_project" "hugo-primer" {
   analytics_access_level               = "disabled"
   builds_access_level                  = "enabled"
   container_registry_access_level      = "disabled"
-  environments_access_level            = "disabled"
+  environments_access_level            = "enabled"
   feature_flags_access_level           = "disabled"
   forking_access_level                 = "enabled"
   infrastructure_access_level          = "disabled"
@@ -71,6 +71,20 @@ module "gitlab_hugo-primer" {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.hugo-primer.http_clone_url
   }
+
+  environments = [
+    {
+      description = "Website dynamic review environments"
+      environment = "review"
+      tier        = "development"
+    },
+    {
+      description  = "Website production environment"
+      environment  = "production"
+      external_url = "https://hugo-primer.netlify.app"
+      tier         = "production"
+    }
+  ]
 
   variables = [
     {

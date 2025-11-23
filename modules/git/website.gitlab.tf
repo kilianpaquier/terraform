@@ -16,7 +16,7 @@ resource "gitlab_project" "website" {
   analytics_access_level               = "disabled"
   builds_access_level                  = "enabled"
   container_registry_access_level      = "disabled"
-  environments_access_level            = "disabled"
+  environments_access_level            = "enabled"
   feature_flags_access_level           = "disabled"
   forking_access_level                 = "disabled"
   infrastructure_access_level          = "disabled"
@@ -64,13 +64,27 @@ module "gitlab_website" {
     gitlab_group_access_token.access_tokens["release"],
     gitlab_project.website
   ]
-  source     = "./gitlab"
-  project    = gitlab_project.website.id
+  source  = "./gitlab"
+  project = gitlab_project.website.id
 
   mirror = {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.website.http_clone_url
   }
+
+  environments = [
+    {
+      description = "Website dynamic review environments"
+      environment = "review"
+      tier        = "development"
+    },
+    {
+      description  = "Website production environment"
+      environment  = "production"
+      external_url = module.shared.domain
+      tier         = "production"
+    }
+  ]
 
   variables = [
     {

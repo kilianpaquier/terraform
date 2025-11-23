@@ -126,15 +126,15 @@ resource "gitlab_group_membership" "memberships" {
   skip_subresources_on_destroy  = false
 }
 
-resource "gitlab_group_protected_environment" "environments" {
-  depends_on = [gitlab_group.kilianpaquier]
-  for_each   = toset(["production", "staging"])
-  group      = gitlab_group.kilianpaquier.id
+# resource "gitlab_group_protected_environment" "environments" {
+#   depends_on = [gitlab_group.kilianpaquier]
+#   for_each   = toset(["production", "staging"])
+#   group      = gitlab_group.kilianpaquier.id
 
-  environment          = each.value
-  approval_rules       = [{ access_level = "maintainer" }]
-  deploy_access_levels = [{ access_level = "maintainer" }]
-}
+#   environment          = each.value
+#   approval_rules       = [{ access_level = "maintainer" }]
+#   deploy_access_levels = [{ access_level = "maintainer" }]
+# }
 
 resource "gitlab_group_service_account" "service_accounts" {
   depends_on = [gitlab_group.kilianpaquier]
