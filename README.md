@@ -13,9 +13,9 @@
 
 ### OVH
 
-- Gestion des applications et droits : https://www.ovh.com/manager/#/iam/api-keys
+- Application and rights management : https://www.ovh.com/manager/#/iam/api-keys
 
-#### Traefik DNS
+#### Traefik DNS rights
 
 ```txt
 POST: /domain/zone/kilianpaquier.dev/record
