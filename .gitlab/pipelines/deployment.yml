@@ -31,3 +31,7 @@ variables:
       - TF_PROJECT_DIR: modules/git
         # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
         TF_ADDRESS: ${TF_BASE_ADDRESS}/ff76aae2.${CI_ENVIRONMENT_SLUG}
+
+tf-tflint:
+  parallel:
+    matrix: []
