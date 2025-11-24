@@ -15,6 +15,15 @@ resource "ovh_domain_name" "dev" {
   }
 }
 
+resource "ovh_domain_zone_record" "storageshare" {
+  depends_on = [ovh_domain_name.dev]
+
+  zone      = module.shared.domain
+  subdomain = "storageshare"
+  fieldtype = "CNAME"
+  target    = "nx84000.your-storageshare.de."
+}
+
 resource "ovh_domain_zone_record" "d2-2" {
   depends_on = [
     ovh_domain_name.dev,
