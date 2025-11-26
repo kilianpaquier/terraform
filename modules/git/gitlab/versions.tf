@@ -5,7 +5,7 @@ terraform {
     # imported module, unnecessary to specify its version
     # tflint-ignore: terraform_required_providers
     gitlab = {
-      source  = "gitlabhq/gitlab"
+      source = "gitlabhq/gitlab"
     }
   }
 }

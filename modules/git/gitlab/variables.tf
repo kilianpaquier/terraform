@@ -40,7 +40,7 @@ variable "project" {
 }
 
 variable "protected_branches" {
-  type = set(string)
+  type    = set(string)
   default = []
 }
 
