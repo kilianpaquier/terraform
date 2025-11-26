@@ -67,11 +67,6 @@ module "gitlab_hugo-primer" {
   source  = "./gitlab"
   project = gitlab_project.hugo-primer.id
 
-  mirror = {
-    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
-    url   = github_repository.hugo-primer.http_clone_url
-  }
-
   environments = [
     {
       description = "Website dynamic review environments"
@@ -85,6 +80,12 @@ module "gitlab_hugo-primer" {
       tier         = "production"
     }
   ]
+  protected_branches = ["main"]
+
+  mirror = {
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
+    url   = github_repository.hugo-primer.http_clone_url
+  }
 
   variables = [
     {

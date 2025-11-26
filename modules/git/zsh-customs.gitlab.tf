@@ -63,6 +63,8 @@ module "gitlab_zsh-customs" {
   source     = "./gitlab"
   project    = gitlab_project.zsh-customs.id
 
+  protected_branches = ["main"]
+
   mirror = {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.zsh-customs.http_clone_url

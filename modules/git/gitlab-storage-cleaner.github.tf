@@ -59,7 +59,7 @@ module "gitlab-storage-cleaner" {
 
   actions_disabled = false
   default_branch   = "main"
-  labels = module.shared.labels
+  labels           = module.shared.labels
 
   environments = [
     { environment = "docker" },

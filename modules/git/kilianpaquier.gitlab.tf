@@ -26,7 +26,9 @@ resource "gitlab_group" "kilianpaquier" {
   }
 
   push_rules {
-    commit_message_regex    = ""
+    branch_name_regex    = ""
+    commit_message_regex = ""
+
     deny_delete_tag         = true
     prevent_secrets         = true
     reject_non_dco_commits  = true
@@ -109,7 +111,7 @@ resource "gitlab_group_membership" "memberships" {
     #   access_level = "developer"
     # }
     "terraform" = {
-      user_id      = gitlab_group_service_account.service_accounts["terraform"].service_account_id
+      user_id = gitlab_group_service_account.service_accounts["terraform"].service_account_id
       # cannot have a custom role between Maintainer and Owner because there's no scope to rotate or create its own tokens
       # cannot be just a Group Access Token because a custom role cannot be assigned to that and Group Access Token(s) (even Owner) cannot rotate or create Group Access Token(s)
       access_level = "owner"
@@ -125,16 +127,6 @@ resource "gitlab_group_membership" "memberships" {
   unassign_issuables_on_destroy = true
   skip_subresources_on_destroy  = false
 }
-
-# resource "gitlab_group_protected_environment" "environments" {
-#   depends_on = [gitlab_group.kilianpaquier]
-#   for_each   = toset(["production", "staging"])
-#   group      = gitlab_group.kilianpaquier.id
-
-#   environment          = each.value
-#   approval_rules       = [{ access_level = "maintainer" }]
-#   deploy_access_levels = [{ access_level = "maintainer" }]
-# }
 
 resource "gitlab_group_service_account" "service_accounts" {
   depends_on = [gitlab_group.kilianpaquier]

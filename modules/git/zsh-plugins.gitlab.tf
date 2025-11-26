@@ -64,8 +64,10 @@ module "gitlab_zsh-plugins" {
     gitlab_group_access_token.access_tokens["release"],
     gitlab_project.zsh-plugins
   ]
-  source     = "./gitlab"
-  project    = gitlab_project.zsh-plugins.id
+  source  = "./gitlab"
+  project = gitlab_project.zsh-plugins.id
+
+  protected_branches = ["main"]
 
   mirror = {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])

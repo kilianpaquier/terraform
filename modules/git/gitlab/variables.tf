@@ -39,6 +39,11 @@ variable "project" {
   type = string
 }
 
+variable "protected_branches" {
+  type = set(string)
+  default = []
+}
+
 variable "variables" {
   type = list(object({
     description = string

@@ -72,6 +72,8 @@ module "gitlab_semantic-release-backmerge" {
   source  = "./gitlab"
   project = gitlab_project.semantic-release-backmerge.id
 
+  protected_branches = ["main"]
+
   # mirror = {
   #   token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
   #   url   = github_repository.semantic-release-backmerge.http_clone_url

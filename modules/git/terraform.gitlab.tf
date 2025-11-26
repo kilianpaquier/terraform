@@ -45,7 +45,6 @@ resource "gitlab_project" "terraform" {
   squash_option                                    = "never"
   suggestion_commit_message                        = "chore(review): apply suggestion"
 
-  allow_pipeline_trigger_approve_deployment   = true
   build_git_strategy                          = "fetch"
   build_timeout                               = 900
   ci_delete_pipelines_in_seconds              = 1296000 # 15d
@@ -74,6 +73,7 @@ module "gitlab_terraform" {
       tier        = "production"
     }
   ]
+  protected_branches = ["main"]
 
   mirror = {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
