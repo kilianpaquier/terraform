@@ -50,7 +50,7 @@ resource "gitlab_project" "renovate" {
   ci_delete_pipelines_in_seconds              = 1296000 # 15d
   ci_forward_deployment_enabled               = true
   ci_forward_deployment_rollback_allowed      = true
-  ci_pipeline_variables_minimum_override_role = "maintainer"
+  ci_pipeline_variables_minimum_override_role = "developer"
   ci_push_repository_for_job_token_allowed    = false
   ci_restrict_pipeline_cancellation_role      = "developer"
   ci_separated_caches                         = true
