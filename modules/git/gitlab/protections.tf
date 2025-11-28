@@ -8,6 +8,6 @@ resource "gitlab_branch_protection" "protections" {
   code_owner_approval_required = true
 
   merge_access_level     = "maintainer"
-  push_access_level      = "admin"
-  unprotect_access_level = "admin"
+  push_access_level      = "maintainer"
+  unprotect_access_level = "maintainer"
 }
