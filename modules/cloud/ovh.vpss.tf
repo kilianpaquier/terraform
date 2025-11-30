@@ -33,3 +33,8 @@ resource "ovh_vps" "codespace" {
     }
   ]
 }
+
+data "ovh_vps" "codespace" {
+  depends_on   = [ovh_vps.codespace]
+  service_name = ovh_vps.codespace.service_name
+}

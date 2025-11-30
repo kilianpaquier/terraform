@@ -21,5 +21,4 @@ terraform:
   engine: opentofu
   modules:
     - modules/git
-    - modules/hetzner
-    - modules/ovh
+    - modules/cloud

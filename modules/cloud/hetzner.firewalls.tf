@@ -32,6 +32,27 @@ resource "hcloud_firewall" "incomings" {
     ])
   }
 
+  rule {
+    description = "Allow ping"
+    direction   = "in"
+    protocol    = "icmp"
+    source_ips = lookup(each.value, "source_ips", [
+      "0.0.0.0/0",
+      "::/0"
+    ])
+  }
+
+  rule {
+    description = "Allow DNS check"
+    direction   = "in"
+    port        = 53
+    protocol    = "udp"
+    source_ips = lookup(each.value, "source_ips", [
+      "0.0.0.0/0",
+      "::/0"
+    ])
+  }
+
   apply_to {
     label_selector = each.value.name
   }

@@ -50,10 +50,7 @@ resource "github_branch_protection" "go-builder-generator" {
 }
 
 module "go-builder-generator" {
-  depends_on = [
-    github_repository.go-builder-generator,
-    gitlab_project.go-builder-generator
-  ]
+  depends_on = [github_repository.go-builder-generator]
   source     = "./github"
   repository = github_repository.go-builder-generator.name
 

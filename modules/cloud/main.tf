@@ -3,14 +3,13 @@ terraform {
 }
 
 locals {
-  # ovh_url       = "https://eu.api.ovh.com/v1"
-  ovh_endpoint  = "ovh-eu"
-  ovh_cloud_url = "https://auth.cloud.ovh.net/v3/"
+  hcloud_url   = "https://api.hetzner.cloud/v1"
+  ovh_endpoint = "ovh-eu"
 }
 
-provider "openstack" {
-  auth_url    = local.ovh_cloud_url
-  domain_name = "default"
+provider "hcloud" {
+  endpoint = local.hcloud_url
+  token    = data.sops_file.sops["hetzner"].data["hcloud_token"]
 }
 
 provider "ovh" {

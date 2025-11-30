@@ -11,13 +11,6 @@ data "ovh_order_cart_product_plan" "vps-1" {
   plan_code      = "vps-2025-model1"
 }
 
-# data "ovh_order_cart_product_plan" "zone" {
-#   cart_id        = data.ovh_order_cart.subsidiary.id
-#   price_capacity = "renew"
-#   product        = "dns"
-#   plan_code      = "zone"
-# }
-
 data "ovh_order_cart_product_plan" "cloud" {
   cart_id        = data.ovh_order_cart.subsidiary.id
   price_capacity = "renew"

@@ -50,10 +50,7 @@ resource "github_branch_protection" "gitlab-storage-cleaner" {
 }
 
 module "gitlab-storage-cleaner" {
-  depends_on = [
-    github_repository.gitlab-storage-cleaner,
-    gitlab_project.gitlab-storage-cleaner
-  ]
+  depends_on = [github_repository.gitlab-storage-cleaner]
   source     = "./github"
   repository = github_repository.gitlab-storage-cleaner.name
 

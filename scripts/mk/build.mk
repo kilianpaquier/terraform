@@ -28,14 +28,8 @@ plan-modules-git:
 test-modules-git:
 	@tofu -chdir=modules/git test
 
-plan-modules-hetzner:
-	@tofu -chdir=modules/hetzner plan
+plan-modules-cloud:
+	@tofu -chdir=modules/cloud plan
 
-test-modules-hetzner:
-	@tofu -chdir=modules/hetzner test
-
-plan-modules-ovh:
-	@tofu -chdir=modules/ovh plan
-
-test-modules-ovh:
-	@tofu -chdir=modules/ovh test
+test-modules-cloud:
+	@tofu -chdir=modules/cloud test

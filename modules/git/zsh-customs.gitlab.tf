@@ -59,9 +59,12 @@ resource "gitlab_project" "zsh-customs" {
 }
 
 module "gitlab_zsh-customs" {
-  depends_on = [github_repository.zsh-customs, gitlab_project.zsh-customs]
-  source     = "./gitlab"
-  project    = gitlab_project.zsh-customs.id
+  depends_on = [
+    github_repository.zsh-customs,
+    gitlab_project.zsh-customs
+  ]
+  source  = "./gitlab"
+  project = gitlab_project.zsh-customs.id
 
   protected_branches = ["main"]
 

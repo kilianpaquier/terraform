@@ -6,7 +6,7 @@ include:
   # Terraform template
   # https://gitlab.com/to-be-continuous/terraform
   - project: to-be-continuous/terraform
-    ref: 920199235a0f000daa8cc05940abd9ba59308445 # 8.1.1
+    ref: a705153bf85ef6237a9033f1943221093c0f4111 # 8.1.2
     file: templates/gitlab-ci-terraform.yml
 
 variables:
@@ -32,9 +32,6 @@ variables:
       - TF_PROJECT_DIR: modules/git
         # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
         TF_ADDRESS: ${TF_BASE_ADDRESS}/ff76aae2.${CI_ENVIRONMENT_SLUG}
-      - TF_PROJECT_DIR: modules/hetzner
+      - TF_PROJECT_DIR: modules/cloud
         # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
-        TF_ADDRESS: ${TF_BASE_ADDRESS}/3a0a796d.${CI_ENVIRONMENT_SLUG}
-      - TF_PROJECT_DIR: modules/ovh
-        # see https://gitlab.com/to-be-continuous/terraform/-/blob/master/templates/gitlab-ci-terraform.yml?ref_type=heads#L774
-        TF_ADDRESS: ${TF_BASE_ADDRESS}/3b1ff739.${CI_ENVIRONMENT_SLUG}
+        TF_ADDRESS: ${TF_BASE_ADDRESS}/771c5852.${CI_ENVIRONMENT_SLUG}
