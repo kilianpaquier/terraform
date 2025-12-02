@@ -71,7 +71,7 @@ module "gitlab_website" {
     {
       description  = "Website production environment"
       environment  = "production"
-      external_url = module.shared.domain
+      external_url = "https://${module.shared.domain}"
       tier         = "production"
     }
   ]
