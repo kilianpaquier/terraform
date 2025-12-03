@@ -49,7 +49,7 @@ resource "github_branch_protection" "pooling" {
   }
 }
 
-module "pooling" {
+module "github_pooling" {
   depends_on = [github_repository.pooling]
   source     = "./github"
   repository = github_repository.pooling.name

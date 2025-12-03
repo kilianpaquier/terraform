@@ -48,7 +48,7 @@ resource "github_branch_protection" "zsh-plugins" {
   }
 }
 
-module "zsh-plugins" {
+module "github_zsh-plugins" {
   depends_on = [github_repository.zsh-plugins]
   source     = "./github"
   repository = github_repository.zsh-plugins.name

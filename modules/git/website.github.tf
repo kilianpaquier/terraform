@@ -50,7 +50,7 @@ resource "github_branch_protection" "website" {
   }
 }
 
-module "website" {
+module "github_website" {
   depends_on = [github_repository.website]
   source     = "./github"
   repository = github_repository.website.name

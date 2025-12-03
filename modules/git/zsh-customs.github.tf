@@ -48,7 +48,7 @@ resource "github_branch_protection" "zsh-customs" {
   }
 }
 
-module "zsh-customs" {
+module "github_zsh-customs" {
   depends_on = [github_repository.zsh-customs]
   source     = "./github"
   repository = github_repository.zsh-customs.name

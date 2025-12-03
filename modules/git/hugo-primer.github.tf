@@ -50,7 +50,7 @@ resource "github_branch_protection" "hugo-primer" {
   }
 }
 
-module "hugo-primer" {
+module "github_hugo-primer" {
   depends_on = [github_repository.hugo-primer]
   source     = "./github"
   repository = github_repository.hugo-primer.name

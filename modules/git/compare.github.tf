@@ -49,7 +49,7 @@ resource "github_branch_protection" "compare" {
   }
 }
 
-module "compare" {
+module "github_compare" {
   depends_on = [github_repository.compare]
   source     = "./github"
   repository = github_repository.compare.name

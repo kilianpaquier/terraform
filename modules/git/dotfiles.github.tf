@@ -48,7 +48,7 @@ resource "github_branch_protection" "dotfiles" {
   }
 }
 
-module "dotfiles" {
+module "github_dotfiles" {
   depends_on = [github_repository.dotfiles]
   source     = "./github"
   repository = github_repository.dotfiles.name

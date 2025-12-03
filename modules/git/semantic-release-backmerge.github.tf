@@ -49,7 +49,7 @@ resource "github_branch_protection" "semantic-release-backmerge" {
   }
 }
 
-module "semantic-release-backmerge" {
+module "github_semantic-release-backmerge" {
   depends_on = [github_repository.semantic-release-backmerge]
   source     = "./github"
   repository = github_repository.semantic-release-backmerge.name
