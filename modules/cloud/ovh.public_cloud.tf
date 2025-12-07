@@ -25,44 +25,21 @@ resource "ovh_cloud_project_ssh_key" "public_keys" {
 
 resource "ovh_cloud_project_instance" "d2-2" {
   depends_on = [
+    data.cloudinit_config.instances,
     ovh_cloud_project.selfhosted,
     ovh_domain_name.dev
   ]
-  for_each = tomap({
-    # bentopdf = {
-    #   file  = "nginx-based.yml"
-    #   image = "docker.io/bentopdf/bentopdf:latest"
-    # }
-    # changedetection = { # FIXME not working yet
-    #   file  = "" # see https://github.com/dgtlmoon/changedetection.io/blob/master/docker-compose.yml
-    #   image = "ghcr.io/dgtlmoon/changedetection.io:latest"
-    # }
-    # cyberchef = {
-    #   file  = "nginx-based.yml"
-    #   image = "ghcr.io/gchq/cyberchef:latest"
-    # }
-    # it-tools = {
-    #   file  = "nginx-based.yml"
-    #   image = "ghcr.io/corentinth/it-tools:latest"
-    # }
-    # omni-tools = {
-    #   file  = "nginx-based.yml"
-    #   image = "docker.io/iib0011/omni-tools:latest"
-    # }
-    # stirling-pdf = {
-    #   file  = "stirling-pdf.yml"
-    #   image = "docker.stirlingpdf.com/stirlingtools/stirling-pdf:latest-ultra-lite"
-    # }
-    # vert = {
-    #   file  = "nginx-based.yml"
-    #   image = "ghcr.io/vert-sh/vert:latest"
-    # }
-  })
+  for_each = {
+    for instance in local.instances : instance.name => {
+      user_data = data.cloudinit_config.instances["${instance.name}-ovh"]
+    } if contains(instance.hosts, "ovh")
+  }
 
   billing_period = "hourly"
   name           = each.key
   region         = "GRA9"
   service_name   = ovh_cloud_project.selfhosted.project_id
+  user_data      = sensitive(each.value.user_data.rendered)
 
   ssh_key {
     name = "xtia"
@@ -79,19 +56,4 @@ resource "ovh_cloud_project_instance" "d2-2" {
   network {
     public = true
   }
-
-  user_data = templatefile("${path.module}/cloud-init/${each.value.file}", {
-    domain   = ovh_domain_name.dev.domain_name
-    image    = each.value.image
-    instance = each.key
-
-    debug       = lookup(each.value, "debug", false)
-    ssh_port    = data.sops_file.sops["ovh"].data["ssh_port"]
-    public_keys = [for key, value in module.shared.public_keys : value]
-
-    ovh_application_key    = data.sops_file.sops["ovh"].data["dns_application_key"]
-    ovh_application_secret = data.sops_file.sops["ovh"].data["dns_application_secret"]
-    ovh_consumer_key       = data.sops_file.sops["ovh"].data["dns_consumer_key"]
-    ovh_endpoint           = local.ovh_endpoint
-  })
 }

@@ -2,6 +2,12 @@
 
 timezone: Europe/Paris
 
+bootcmd:
+  - mkdir /app
+
+runcmd:
+  - systemctl disable --now ssh
+
 packages:
   - fail2ban
   - rsyslog
@@ -10,7 +16,7 @@ packages:
 users:
   - gecos: NonRoot
     groups: docker%{ if debug ~}, adm, plugdev, sudo%{ endif }
-    homedir: /home/nonroot
+    homedir: /app
     name: nonroot
     shell: /bin/bash
 %{ if debug ~}
@@ -113,16 +119,19 @@ write_files:
   # docker configuration
   - content: |
       services:
-
         traefik:
           container_name: traefik
           image: docker.io/traefik:v3
           restart: unless-stopped
+          security_opt:
+            - no-new-privileges:true
+          cap_drop:
+            - ALL
           networks:
             - traefik
           ports:
-            - '80:80'
-            - '443:443'
+            - 80:80
+            - 443:443
           command:
             - --accesslog.filepath=/var/log/traefik/access.log
             - --certificatesresolvers.letsencrypt.acme.dnschallenge.provider=ovh
@@ -141,32 +150,21 @@ write_files:
             - OVH_CONSUMER_KEY=${ovh_consumer_key}
             - OVH_ENDPOINT=${ovh_endpoint}
           volumes:
-            - /home/nonroot/traefik/letsencrypt:/etc/letsencrypt
+            - /app/traefik/letsencrypt:/etc/letsencrypt
             - /var/log/traefik:/var/log/traefik
             - /var/run/docker.sock:/var/run/docker.sock:ro
           healthcheck:
-            test: [ "CMD", "traefik", "healthcheck", "--ping" ]
+            test: ["CMD", "traefik", "healthcheck", "--ping"]
             interval: 30s
             timeout: 10s
             retries: 3
             start_period: 10s
-
-        fail2ban:
-          container_name: fail2ban
-          image: crazymax/fail2ban:latest
-          restart: unless-stopped
-          network_mode: host
-          cap_add:
-            - NET_ADMIN
-            - NET_RAW
-          volumes:
-            - /etc/fail2ban:/etc/fail2ban:rw
-            - /var/log:/var/log:ro
-
         ${instance}:
           container_name: ${instance}
           image: ${image}
           restart: unless-stopped
+          security_opt:
+            - no-new-privileges:true
           networks:
             - traefik
           volumes:
@@ -174,26 +172,25 @@ write_files:
           labels:
             - traefik.enable=true
             - traefik.http.routers.${instance}.entrypoints=websecure
-            - traefik.http.routers.${instance}.rule=Host(`${instance}.${domain}`)
+            - traefik.http.routers.${instance}.rule=Host(`${subdomain}.${domain}`)
             - traefik.http.routers.${instance}.tls.certresolver=letsencrypt
-            - traefik.http.services.${instance}.loadbalancer.server.port=80
+            - traefik.http.services.${instance}.loadbalancer.server.port=${http_port}
             # force ending /
             - traefik.http.middlewares.force-slash.redirectregex.regex=^(https?://[^/]+)$
             - traefik.http.middlewares.force-slash.redirectregex.replacement=$1/
             - traefik.http.routers.${instance}.middlewares=force-slash
           healthcheck:
-            test: [ "CMD", "curl", "-f", "http://localhost:80" ]
+            test: ["CMD", "wget", "--spider", "-q", "http://0.0.0.0:${http_port}"]
             interval: 30s
             timeout: 10s
             retries: 3
             start_period: 10s
-
       networks:
         traefik:
           external: false
     encoding: text/plain
     owner: nonroot:nonroot
-    path: /home/nonroot/docker-compose.yml
+    path: /app/docker-compose.yml
     permissions: "0o644"
 
 runcmd:
@@ -204,7 +201,7 @@ runcmd:
   - ufw allow 80/tcp # allow specific HTTP port
 
 %{ if debug ~}
-  - ufw allow ${ssh_port}/tcp # allow specific ssh port
+  - ufw allow ${ssh_port}/tcp # allow specific SSH port
   - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
 %{ endif ~}
 
@@ -213,7 +210,19 @@ runcmd:
   - ufw allow out on docker0
 
   - ufw --force enable
-  - systemctl restart fail2ban sshd
+  - systemctl restart fail2ban
+%{ if debug ~}
+  - systemctl enable --now ssh
+%{ endif ~}
+
+  - UID="$(id nonroot -u)"
+  - GID="$(id nonroot -g)"
+
+  - docker pull ${image}
+  - DID="$(docker inspect -f '{{.Config.User}}' ${image})"
+
+  - chown -R "$UID:$GID" /app
+  - if [ "$DID" != "" ]; then mkdir -p /var/log/${instance} && chown "$DID:$DID" /var/log/${instance}; fi
 
   # start all containers
   - su - nonroot -c "docker compose up -d --wait"

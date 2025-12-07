@@ -1,4 +1,6 @@
 resource "ovh_vps" "codespace" {
+  count = contains(keys(data.cloudinit_config.codespace), "ovh") ? 1 : 0
+
   lifecycle {
     ignore_changes = [
       # resource is imported, ignore order details
@@ -36,5 +38,6 @@ resource "ovh_vps" "codespace" {
 
 data "ovh_vps" "codespace" {
   depends_on   = [ovh_vps.codespace]
-  service_name = ovh_vps.codespace.service_name
+  count        = length(ovh_vps.codespace)
+  service_name = ovh_vps.codespace[0].service_name
 }

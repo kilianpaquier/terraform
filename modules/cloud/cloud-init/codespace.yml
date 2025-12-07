@@ -54,7 +54,7 @@ runcmd:
   - ufw default deny incoming # block all incoming requests
   - ufw default allow outgoing # allow all outgoing requests
 
-  - ufw allow ${ssh_port}/tcp # allow specific ssh port
+  - ufw allow ${ssh_port}/tcp # allow specific SSH port
   - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
 
   # limit exposed connections between docker containers

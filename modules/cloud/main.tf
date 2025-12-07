@@ -9,7 +9,7 @@ locals {
 
 provider "hcloud" {
   endpoint = local.hcloud_url
-  token    = data.sops_file.sops["hetzner"].data["hcloud_token"]
+  token    = data.sops_file.sops["hcloud"].data["hcloud_token"]
 }
 
 provider "ovh" {
