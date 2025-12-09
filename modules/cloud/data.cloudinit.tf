@@ -17,7 +17,7 @@ data "cloudinit_config" "codespace" {
 
 data "cloudinit_config" "coolify" {
   depends_on = [ovh_domain_name.dev]
-  for_each = { for host in local.coolify.hosts : host => local.coolify }
+  for_each   = { for host in local.coolify.hosts : host => local.coolify }
 
   base64_encode = false
   gzip          = false
