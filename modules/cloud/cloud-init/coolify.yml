@@ -1,0 +1,93 @@
+#cloud-config
+
+timezone: Europe/Paris
+
+packages:
+  - fail2ban
+  - rsyslog
+  - ufw
+
+write_files:
+  - content: |
+      [sshd]
+      enabled  = true
+      port     = ${ssh_port}
+      filter   = sshd
+      maxretry = 3
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/sshd.conf
+    permissions: "0o644"
+  - content: |
+      ChallengeResponseAuthentication no
+      KbdInteractiveAuthentication no
+      MaxAuthTries 3
+      PasswordAuthentication no
+      PermitRootLogin prohibit-password
+      Port ${ssh_port}
+      PubkeyAuthentication yes
+    encoding: text/plain
+    owner: root:root
+    path: /etc/ssh/sshd_config.d/cloud-init.conf
+    permissions: "0o644"
+
+  # fail2ban for traefik
+  - content: |
+      [Definition]
+      failregex = ^<HOST> -.*"(GET|POST).*HTTP.*" (401|403)
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/filter.d/traefik-auth.conf
+    permissions: "0o644"
+  - content: |
+      [Definition]
+      failregex = ^<HOST> -.*"(GET|POST).*HTTP.*" 404
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/filter.d/traefik-404.conf
+    permissions: "0o644"
+  - content: |
+      [traefik-auth]
+      enabled  = true
+      port     = 80,443
+      filter   = traefik-auth
+      logpath  = /data/coolify/proxy/access.log
+      maxretry = 5
+      findtime = 5m
+      bantime  = 30m
+
+      [traefik-404]
+      enabled  = true
+      port     = 80,443
+      filter   = traefik-404
+      logpath  = /data/coolify/proxy/access.log
+      maxretry = 10
+      findtime = 5m
+      bantime  = 30m
+    encoding: text/plain
+    owner: root:root
+    path: /etc/fail2ban/jail.d/traefik.conf
+    permissions: "0o644"
+
+runcmd:
+  - ufw default deny incoming # block all incoming requests
+  - ufw default allow outgoing # allow all outgoing requests
+
+  - ufw allow 443/tcp # allow specific HTTPS port
+  - ufw allow 80/tcp # allow specific HTTP port
+
+  # allow specific coolify ports
+  - ufw allow 6001/tcp
+  - ufw allow 6002/tcp
+  - ufw allow 8000/tcp
+
+  - ufw allow ${ssh_port}/tcp # allow specific SSH port
+  - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
+
+  - ufw --force enable
+  - systemctl restart fail2ban ssh
+
+  - curl -fsSL https://cdn.coollabs.io/coolify/install.sh -o /tmp/coolify_setup.sh && chmod +x /tmp/coolify_setup.sh
+  - ROOT_USERNAME="${username}" ROOT_USER_EMAIL="${email}" ROOT_USER_PASSWORD="${password}" /tmp/coolify_setup.sh

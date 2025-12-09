@@ -1,33 +1,78 @@
 locals {
   firewalls = [
     {
-      description = "Allow private SSH port"
-      name        = "ssh"
-      port        = data.sops_file.sops["hcloud"].data["ssh_port"]
-      protocol    = "tcp"
+      name = "ssh"
+      rules = [
+        {
+          description = "Allow private SSH port"
+          port        = data.sops_file.sops["base"].data["ssh_port"]
+          protocol    = "tcp"
+        }
+      ]
     },
     {
-      description = "Allow HTTP port"
-      name        = "http"
-      port        = 80
-      protocol    = "tcp"
+      name = "known-ssh"
+      rules = [
+        {
+          description = "Allow known SSH port"
+          port        = 22
+          protocol    = "tcp"
+        }
+      ]
     },
     {
-      description = "Allow HTTPS port"
-      name        = "https"
-      port        = 443
-      protocol    = "tcp"
+      name = "https"
+      rules = [
+        {
+          description = "Allow HTTP port"
+          port        = 80
+          protocol    = "tcp"
+        },
+        {
+          description = "Allow HTTPs port"
+          port        = 443
+          protocol    = "tcp"
+        }
+      ]
     },
     {
-      description = "Allow DNS check"
-      name        = "dns"
-      port        = 53
-      protocol    = "udp"
+      name = "coolify"
+      rules = [
+        {
+          description = "Allow specific coolify port on instance initialization"
+          port        = 6001
+          protocol    = "tcp"
+        },
+        {
+          description = "Allow specific coolify port on instance initialization"
+          port        = 6002
+          protocol    = "tcp"
+        },
+        {
+          description = "Allow specific coolify port on instance initialization"
+          port        = 8000
+          protocol    = "tcp"
+        }
+      ]
     },
     {
-      description = "Allow ping"
-      name        = "ping"
-      protocol    = "icmp"
+      name = "dns"
+      rules = [
+        {
+          description = "Allow DNS check"
+          port        = 53
+          protocol    = "udp"
+        }
+      ]
+    },
+    {
+      name = "ping"
+      rules = [
+        {
+          description = "Allow ping"
+          protocol    = "icmp"
+        }
+      ]
     }
   ]
 

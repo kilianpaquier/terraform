@@ -1,0 +1,19 @@
+coolify_email: ENC[AES256_GCM,data:HwpUbbkVaIbUqLqASCJe00IMcf+Cj1c=,iv:faWjISnPZpARuuxOj9wkH4ZJyF2KZg7zs+iJyl1wZg4=,tag:NIrLeu4z3XS7GfpzJipTLw==,type:str]
+coolify_username: ENC[AES256_GCM,data:guyjRdJWe9xwJ5apiQ==,iv:Q4Pv8eW7lnzTBS+7HKp3vn70c5AWaX2NUPfsrC+FJnY=,tag:1ot1yiu3JJ7xSrx82i4Ifg==,type:str]
+coolify_password: ENC[AES256_GCM,data:2GJ+0cnkClgdGQDjHTRF0uNfBCo=,iv:71/48VxmMFoDmNjNXxtMk9Idtfn4b2Lel40ETvagjXE=,tag:Jnsprtt1m3owglbBUq5T4A==,type:str]
+ssh_port: ENC[AES256_GCM,data:RsRjUmc=,iv:P6Y8iKXSUaVfz6cgQAHgM1UIP1Y7fhdojSdksTupHyc=,tag:kZQ5OlDxZdcWG3igNhohhw==,type:int]
+sops:
+    age:
+        - recipient: age1j06cwedktsxq2rq9e7tgvet2049vhkwdwx7p5ddmc3v402axk92qka580y
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB4STZVYnFkaHF5WVkxc0h4
+            SllsOHNDU0dyTDdLTzBYSXlyMjg1QWxSMjBFCmRLa0lVdk54OWxKL29VcFBGQWFo
+            L1FxdG9Yc2lkOFUwamZRdmwrZVFGNFkKLS0tIE5KMXhIQTJJaitwRDZZcVNHdkFr
+            aUNXUnJOY1h2RkhPUEVLeFJ2ZEt5ZE0K0225psNOYymNNLPj0fFPgHjOUwFI/hvt
+            9TMyxwtfzdZj8wXR6Ikr1XET1PuFf37381wmfqcYZ79wR6D3XMo6Uw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-09T20:55:30Z"
+    mac: ENC[AES256_GCM,data:23E3J7bV34kXHoiZ3DA1x117kRo696j0NcGH2cl8DfmQQ3zRNKkgLAkxJ5T2lElWl0qf36Ht9UW3/9CNqm9Ipmg3qHhceikLBWEU78s6DF/Clv/79xsJzBEnwDrIIJir3VrQ13s2+ZjFP8SpNpkFLMcAFsnpCABvztX3UWaw0Ro=,iv:cbDQQos1xE8W8H3CIBilNZCa/lpDJ76umkx3DOGXkXE=,tag:+O7IHkCxAy0kB+2Sge9ESQ==,type:str]
+    unencrypted_suffix: _unencrypted
+    version: 3.11.0

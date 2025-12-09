@@ -1,5 +1,4 @@
 hcloud_token: ENC[AES256_GCM,data:LcWVPa4pEBhVVDvID0CDTL5zw/AV1d9N87rVKuDvYEFirNNO+ZRKjxvqznv1P2wJkj5keblUUcX//WDYgG/JAg==,iv:WIjSjyu4iK1Rld/YPFjFa3r4Q2ptEKXBZssPlEmWgXw=,tag:vkeisOdCSdqIGhnhZDS8NA==,type:str]
-ssh_port: ENC[AES256_GCM,data:/4LhYfA=,iv:F0RdSP+IMD/uloihhWL7imusW+RFrtcxTRstVrQsQQ8=,tag:oI8vsbWQMKlaRWbfMDF0ow==,type:int]
 sops:
     age:
         - recipient: age1j06cwedktsxq2rq9e7tgvet2049vhkwdwx7p5ddmc3v402axk92qka580y
@@ -11,7 +10,7 @@ sops:
             UmJTa3Bjd1pnNHZhbm12WGliZVc0MDAKCMSxVWDk0F1r4MFY/qvcJIKyKL4DLJw/
             Dm+jHgLg7JA2bQ/msZYrE+gejqLido8lzwYlBHsh2U+ngGbKgySF/w==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-11-23T15:18:46Z"
-    mac: ENC[AES256_GCM,data:fsz5NAYeiaBc/BYH1hjXSAVArVYmedjVKZL9XlmIY9wCkh7KZI84jVTFAcLWSajSJjItX8CdSW8hkIIdiXAlYLgIC6Mgw6Kw/ABeY3kHAbxGKda/QXuRV5jKoUiyt3BLj0GSrTsiTUwDU28IYr/TOT6kNWblhjpA+2Iv1KIyNsQ=,iv:c/l16zGgJIP7QVHxeIxnmOixKYItvhQ6ZScn3ZOwL5I=,tag:vqGfAiXzkUKB9KwSc4Tx0Q==,type:str]
+    lastmodified: "2025-12-09T20:55:22Z"
+    mac: ENC[AES256_GCM,data:sObnTn3+BELLuAumPSpRodj4VCUT+a+OkK/BHBCDMwyVwj1teZRGw3uIZ6UNXdVEa+L7OY8pcTcbz8gbOSSqdRxtDGBgoBIyJkgPgkgb56rtsb4K4lukFFo6fyF3J8Pn82uT+xE/ELVAX/dps90OSD7dgS/BQTNhKSB/btXKL+w=,iv:oPpkyol882aB0L6Q0/OfYKRXJQnkwyNJWhrCE1CMsE8=,tag:ZFapJIoSc7sABha/xL8auA==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

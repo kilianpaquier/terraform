@@ -19,67 +19,84 @@ resource "ovh_domain_zone_record" "records" {
   depends_on = [
     data.ovh_vps.codespace,
     hcloud_server.codespace,
-    hcloud_server.instances,
-    ovh_cloud_project_instance.d2-2,
+    hcloud_server.coolify,
     ovh_domain_name.dev
   ]
   for_each = merge(
     # hcloud codespace
     length(hcloud_server.codespace) > 0 ? {
-      codespace-hcloud-ipv4 = {
-        subdomain = "codespace.hcloud"
+      codespace-ipv4 = {
+        subdomain = "codespace"
         target    = hcloud_server.codespace[0].ipv4_address
         type      = "A"
       }
-      codespace-hcloud-ipv6 = {
-        subdomain = "codespace.hcloud"
+      codespace-ipv6 = {
+        subdomain = "codespace"
         target    = hcloud_server.codespace[0].ipv6_address
         type      = "AAAA"
       }
     } : {},
     # ovh codespace
     length(data.ovh_vps.codespace) > 0 ? {
-      codespace-ovh-ipv4 = {
-        subdomain = "codespace.ovh"
+      codespace-ipv4 = {
+        subdomain = "codespace"
         target    = one([for ip in data.ovh_vps.codespace[0].ips : ip if strcontains(ip, ".")])
         type      = "A"
       }
-      codespace-ovh-ipv6 = {
-        subdomain = "codespace.ovh"
+      codespace-ipv6 = {
+        subdomain = "codespace"
         target    = one([for ip in data.ovh_vps.codespace[0].ips : ip if strcontains(ip, ":")])
         type      = "AAAA"
       }
     } : {},
-    # hcloud instances
-    {
-      for name, instance in hcloud_server.instances : "${name}-hcloud-ipv4" => {
-        subdomain = "${instance.name}.hcloud"
-        target    = instance.ipv4_address
+    # hcloud coolify
+    length(hcloud_server.coolify) > 0 ? merge([
+      {
+        coolify-ipv4 = {
+          subdomain = "coolify"
+          target    = hcloud_server.coolify[0].ipv4_address
+          type      = "A"
+        }
+        coolify-ipv6 = {
+          subdomain = "coolify"
+          target    = hcloud_server.coolify[0].ipv6_address
+          type      = "AAAA"
+        }
+        wildcard-ipv4 = {
+          subdomain = "*"
+          target    = hcloud_server.coolify[0].ipv4_address
+          type      = "A"
+        }
+        wildcard-ipv6 = {
+          subdomain = "*"
+          target    = hcloud_server.coolify[0].ipv6_address
+          type      = "AAAA"
+        }
+      },
+    ]...) : {},
+    # ovh coolify
+    length(data.ovh_vps.coolify) > 0 ? {
+      coolify-ipv4 = {
+        subdomain = "coolify"
+        target    = one([for ip in data.ovh_vps.coolify[0].ips : ip if strcontains(ip, ".")])
         type      = "A"
       }
-    },
-    {
-      for name, instance in hcloud_server.instances : "${name}-hcloud-ipv6" => {
-        subdomain = "${instance.name}.hcloud"
-        target    = instance.ipv6_address
+      coolify-ipv6 = {
+        subdomain = "coolify"
+        target    = one([for ip in data.ovh_vps.coolify[0].ips : ip if strcontains(ip, ":")])
         type      = "AAAA"
       }
-    },
-    # ovh instances
-    {
-      for name, instance in ovh_cloud_project_instance.d2-2 : "${name}-ovh-ipv4" => {
-        subdomain = "${instance.name}.ovh"
-        target    = one([for address in instance.addresses : address.ip if address.version == 4])
+      wildcard-ipv4 = {
+        subdomain = "*"
+        target    = one([for ip in data.ovh_vps.coolify[0].ips : ip if strcontains(ip, ".")])
         type      = "A"
       }
-    },
-    {
-      for name, instance in ovh_cloud_project_instance.d2-2 : "${name}-ovh-ipv6" => {
-        subdomain = "${instance.name}.ovh"
-        target    = one([for address in instance.addresses : address.ip if address.version == 6])
+      wildcard-ipv6 = {
+        subdomain = "*"
+        target    = one([for ip in data.ovh_vps.coolify[0].ips : ip if strcontains(ip, ":")])
         type      = "AAAA"
       }
-    },
+    } : {},
     # static records
     {
       storageshare = {

@@ -17,31 +17,16 @@ resource "ovh_ip_firewall_rule" "firewalls" {
           ip = ovh_ip_firewall.firewalls["codespace"].ip_on_firewall
         })
       },
-      {
-        for index, firewall in local.firewalls : "codespace-${firewall.name}" => merge(firewall, {
-          action   = "permit"
-          ip       = ovh_ip_firewall.firewalls["codespace"].ip_on_firewall
-          sequence = index + 1 // 0 is reserverd
-        }) if contains(local.codespace.labels, firewall.name)
-      },
-    ]...) : {},
-    # public cloud instances
-    merge([
-      for instance in local.instances : merge(
-        {
-          for firewall in local.ovh-firewalls : "${instance.name}-${firewall.name}" => merge(firewall, {
-            ip = ovh_ip_firewall.firewalls[instance.name].ip_on_firewall
-          }) if contains(keys(ovh_ip_firewall.firewalls), instance.name)
-        },
-        {
-          for index, firewall in local.firewalls : "${instance.name}-${firewall.name}" => merge(firewall, {
+      merge([
+        for idf, firewall in local.firewalls : {
+          for idr, rule in firewall.rules : "codespace-${firewall.name}" => merge(rule, {
             action   = "permit"
-            ip       = ovh_ip_firewall.firewalls[instance.name].ip_on_firewall
-            sequence = index + 1 // 0 is reserverd
-          }) if contains(keys(ovh_ip_firewall.firewalls), instance.name) && contains(instance.labels, firewall.name)
-        }
-      )
-    ]...)
+            ip       = ovh_ip_firewall.firewalls["codespace"].ip_on_firewall
+            sequence = idf + idr + 1 // 0 is reserverd
+          })
+        } if contains(local.codespace.labels, firewall.name)
+      ]...)
+    ]...) : {},
   ]...)
 
   action           = each.value.action
@@ -56,7 +41,6 @@ resource "ovh_ip_firewall_rule" "firewalls" {
 resource "ovh_ip_reverse" "reverses" {
   depends_on = [
     data.ovh_vps.codespace,
-    ovh_cloud_project_instance.d2-2,
     ovh_domain_name.dev,
     ovh_domain_zone_record.records
   ]
@@ -64,34 +48,19 @@ resource "ovh_ip_reverse" "reverses" {
     # codespace
     length(data.ovh_vps.codespace) > 0 ? {
       codespace-ipv4 = {
-        ip_reverse = ovh_domain_zone_record.records["codespace-ovh-ipv4"].target
+        ip_reverse = ovh_domain_zone_record.records["codespace-ipv4"].target
         range      = "32"
         subdomain  = "codespace"
       }
       codespace-ipv6 = {
-        ip_reverse = ovh_domain_zone_record.records["codespace-ovh-ipv6"].target
+        ip_reverse = ovh_domain_zone_record.records["codespace-ipv6"].target
         range      = "128"
         subdomain  = "codespace"
       }
-    } : {},
-    # public cloud instances
-    merge([
-      for name, instance in ovh_cloud_project_instance.d2-2 : {
-        "${name}-ipv4" = {
-          ip_reverse = ovh_domain_zone_record.records["${name}-ovh-ipv4"].target
-          range      = "32"
-          subdomain  = name
-        }
-        "${name}-ipv6" = {
-          ip_reverse = ovh_domain_zone_record.records["${name}-ovh-ipv6"].target
-          range      = "128"
-          subdomain  = name
-        }
-      }
-    ]...)
+    } : {}
   ]...)
 
   ip         = lookup(each.value, "ip", "${each.value.ip_reverse}/${lookup(each.value, "range", null)}")
   ip_reverse = each.value.ip_reverse
-  reverse    = "${each.value.subdomain}.ovh.${ovh_domain_name.dev.domain_name}."
+  reverse    = "${each.value.subdomain}.${ovh_domain_name.dev.domain_name}."
 }

@@ -27,7 +27,7 @@ resource "hcloud_server" "codespace" {
 
   ssh_keys = [for key, value in module.shared.public_keys : key]
 
-  user_data = data.cloudinit_config.codespace["hcloud"].rendered
+  user_data = sensitive(data.cloudinit_config.codespace["hcloud"].rendered)
 
   public_net {
     ipv4_enabled = true
@@ -35,26 +35,21 @@ resource "hcloud_server" "codespace" {
   }
 }
 
-resource "hcloud_server" "instances" {
+resource "hcloud_server" "coolify" {
   depends_on = [
-    data.cloudinit_config.instances,
-    hcloud_placement_group.default,
-    hcloud_ssh_key.ssh_keys
+    data.cloudinit_config.coolify,
+    hcloud_ssh_key.ssh_keys,
+    hcloud_placement_group.default
   ]
-  for_each = {
-    for instance in local.instances : instance.name => {
-      labels    = instance.labels
-      user_data = data.cloudinit_config.instances["${instance.name}-hcloud"]
-    } if contains(instance.hosts, "hcloud")
-  }
+  count = contains(keys(data.cloudinit_config.coolify), "hcloud") ? 1 : 0
 
   lifecycle {
     ignore_changes = [ssh_keys]
   }
 
-  name        = each.key
+  name        = "coolify"
   datacenter  = "nbg1-dc3"
-  image       = "docker-ce"
+  image       = "debian-13"
   server_type = "cx23"
 
   allow_deprecated_images  = false
@@ -64,12 +59,12 @@ resource "hcloud_server" "instances" {
 
   backups            = false
   keep_disk          = true
-  labels             = { for name in each.value.labels : name => "" }
+  labels             = { for label in local.coolify.labels : label => "" }
   placement_group_id = hcloud_placement_group.default.id
 
   ssh_keys = [for key, value in module.shared.public_keys : key]
 
-  user_data = sensitive(each.value.user_data.rendered)
+  user_data = sensitive(data.cloudinit_config.coolify["hcloud"].rendered)
 
   public_net {
     ipv4_enabled = true
