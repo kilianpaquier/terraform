@@ -7,7 +7,7 @@ resource "hcloud_server" "codespace" {
   count = contains(keys(data.cloudinit_config.codespace), "hcloud") ? 1 : 0
 
   lifecycle {
-    ignore_changes = [ssh_keys]
+    ignore_changes = [ssh_keys, user_data]
   }
 
   name        = "codespace"
@@ -44,12 +44,12 @@ resource "hcloud_server" "coolify" {
   count = contains(keys(data.cloudinit_config.coolify), "hcloud") ? 1 : 0
 
   lifecycle {
-    ignore_changes = [ssh_keys]
+    ignore_changes = [ssh_keys, user_data]
   }
 
   name        = "coolify"
   datacenter  = "nbg1-dc3"
-  image       = "debian-13"
+  image       = "ubuntu-24.04"
   server_type = "cx23"
 
   allow_deprecated_images  = false

@@ -13,7 +13,7 @@ resource "ovh_vps" "codespace" {
   }
 
   display_name   = "codespace.vps.ovh.net"
-  public_ssh_key = module.shared.public_keys.xtia
+  public_ssh_key = module.shared.public_keys.desktop
 
   ovh_subsidiary = data.ovh_order_cart.subsidiary.ovh_subsidiary
   plan = [
@@ -73,7 +73,7 @@ resource "ovh_vps" "coolify" {
         },
         {
           label = "vps_os"
-          value = "Debian 13"
+          value = "Ubuntu 24.04"
         }
       ]
     }

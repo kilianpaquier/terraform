@@ -7,6 +7,11 @@ packages:
   - rsyslog
   - ufw
 
+ssh_authorized_keys:
+%{ for public_key in public_keys ~}
+  - ${public_key}
+%{ endfor ~}
+
 write_files:
   - content: |
       [sshd]
@@ -82,12 +87,9 @@ runcmd:
   - ufw allow 6001/tcp
   - ufw allow 6002/tcp
   - ufw allow 8000/tcp
-
-  - ufw allow ${ssh_port}/tcp # allow specific SSH port
-  - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
+  - ufw allow ${ssh_port}/tcp
 
   - ufw --force enable
   - systemctl restart fail2ban ssh
 
-  - curl -fsSL https://cdn.coollabs.io/coolify/install.sh -o /tmp/coolify_setup.sh && chmod +x /tmp/coolify_setup.sh
-  - ROOT_USERNAME="${username}" ROOT_USER_EMAIL="${email}" ROOT_USER_PASSWORD="${password}" /tmp/coolify_setup.sh
+  - env ROOT_USERNAME="${username}" ROOT_USER_EMAIL="${email}" ROOT_USER_PASSWORD="${password}" bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'

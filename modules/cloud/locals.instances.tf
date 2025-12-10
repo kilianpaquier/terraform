@@ -11,9 +11,9 @@ locals {
   coolify = {
     userdata = "coolify.yml"
     hosts = [
-      # "hcloud",
+      "hcloud",
       # "ovh"
     ]
-    labels = ["dns", "https", "ping", "coolify"]
+    labels = ["dns", "https", "ping", "ssh"]
   }
 }
