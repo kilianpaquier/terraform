@@ -1,15 +1,7 @@
-terraform {
-  backend "http" {}
-}
-
-locals {
-  owner = "kilianpaquier"
-}
-
 provider "external" {}
 
 provider "github" {
-  owner = local.owner
+  owner = "kilianpaquier"
   token = data.sops_file.sops["github"].data["terraform_token"]
 }
 

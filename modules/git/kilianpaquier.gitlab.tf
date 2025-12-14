@@ -80,7 +80,7 @@ resource "gitlab_group_access_token" "access_tokens" {
 
 resource "gitlab_group_label" "labels" {
   depends_on = [gitlab_group.kilianpaquier]
-  for_each   = { for label in module.shared.labels : label.name => label }
+  for_each   = { for label in local.labels : label.name => label }
   group      = gitlab_group.kilianpaquier.id
 
   color       = each.value.color

@@ -55,5 +55,5 @@ module "github_zsh-plugins" {
 
   actions_disabled = true
   default_branch   = "main"
-  labels           = module.shared.labels
+  labels           = local.labels
 }
