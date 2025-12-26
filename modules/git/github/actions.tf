@@ -3,7 +3,6 @@ resource "github_actions_environment_secret" "secrets" {
   for_each = merge([
     for env in var.environments : {
       for secret in env.secrets : "${env.environment}:${secret.secret_name}" => {
-        # encrypted_value = secret.encrypted_value != null ? secret.encrypted_value : secret.plaintext_value != null ? null : data.external.sodium_secrets["${env.environment}:${secret.secret_name}"].result.sodium_encrypted_value
         encrypted_value = secret.encrypted_value
         environment     = env.environment
         secret_name     = secret.secret_name
@@ -41,7 +40,6 @@ resource "github_actions_environment_variable" "variables" {
 resource "github_actions_secret" "secrets" {
   for_each = {
     for secret in var.secrets : secret.secret_name => {
-      # encrypted_value = secret.encrypted_value != null ? secret.encrypted_value : secret.plaintext_value != null ? null : data.external.sodium_secrets[secret.secret_name].result.sodium_encrypted_value
       encrypted_value = secret.encrypted_value
       plaintext_value = secret.plaintext_value
     }
