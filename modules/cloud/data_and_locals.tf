@@ -1,3 +1,9 @@
+#####################################################
+#
+# Locals
+#
+#####################################################
+
 locals {
   firewalls = [
     {
@@ -5,8 +11,9 @@ locals {
       rules = [
         {
           description = "Allow private SSH port"
-          port        = data.sops_file.sops["base"].data["ssh_port"]
+          port        = data.sops_file.sops["cloudinit"].data["ssh_port"]
           protocol    = "tcp"
+          sequence    = 1
         }
       ]
     },
@@ -17,6 +24,7 @@ locals {
           description = "Allow known SSH port"
           port        = 22
           protocol    = "tcp"
+          sequence    = 2
         }
       ]
     },
@@ -27,11 +35,13 @@ locals {
           description = "Allow HTTP port"
           port        = 80
           protocol    = "tcp"
+          sequence    = 3
         },
         {
           description = "Allow HTTPs port"
           port        = 443
           protocol    = "tcp"
+          sequence    = 4
         }
       ]
     },
@@ -42,16 +52,19 @@ locals {
           description = "Allow specific coolify port on instance initialization"
           port        = 6001
           protocol    = "tcp"
+          sequence    = 5
         },
         {
           description = "Allow specific coolify port on instance initialization"
           port        = 6002
           protocol    = "tcp"
+          sequence    = 6
         },
         {
           description = "Allow specific coolify port on instance initialization"
           port        = 8000
           protocol    = "tcp"
+          sequence    = 7
         }
       ]
     },
@@ -62,6 +75,7 @@ locals {
           description = "Allow DNS check"
           port        = 53
           protocol    = "udp"
+          sequence    = 15
         }
       ]
     },
@@ -71,6 +85,7 @@ locals {
         {
           description = "Allow ping"
           protocol    = "icmp"
+          sequence    = 16
         }
       ]
     }
@@ -85,7 +100,19 @@ locals {
       sequence   = 0
       tcp_option = "established"
     },
-    # close all TCP connection
+    # close all other connections
+    {
+      action   = "deny"
+      name     = "denyall"
+      protocol = "ipv4"
+      sequence = 17
+    },
+    {
+      action   = "deny"
+      name     = "denyall"
+      protocol = "udp"
+      sequence = 18
+    },
     {
       action   = "deny"
       name     = "denyall"
@@ -93,4 +120,29 @@ locals {
       sequence = 19
     }
   ]
+}
+
+#####################################################
+#
+# OVHcloud
+#
+#####################################################
+
+data "ovh_me" "myaccount" {}
+
+data "ovh_order_cart" "subsidiary" {
+  ovh_subsidiary = data.ovh_me.myaccount.ovh_subsidiary
+}
+
+#####################################################
+#
+# Sops
+#
+#####################################################
+
+data "sops_file" "sops" {
+  for_each = toset(["providers", "cloudinit"])
+
+  source_file = "sops.${each.value}.enc.yml"
+  input_type  = "yaml"
 }

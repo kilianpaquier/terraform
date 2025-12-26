@@ -1,6 +1,10 @@
 #cloud-config
 
 timezone: Europe/Paris
+hostname: coolify
+
+package_update: true
+package_upgrade: true
 
 packages:
   - fail2ban
@@ -26,6 +30,8 @@ write_files:
     path: /etc/fail2ban/jail.d/sshd.conf
     permissions: "0o644"
   - content: |
+      AllowUsers root
+      AuthorizedKeysFile .ssh/authorized_keys
       ChallengeResponseAuthentication no
       KbdInteractiveAuthentication no
       MaxAuthTries 3
@@ -77,13 +83,12 @@ write_files:
     permissions: "0o644"
 
 runcmd:
+  - ufw --force reset
   - ufw default deny incoming # block all incoming requests
   - ufw default allow outgoing # allow all outgoing requests
 
-  - ufw allow 443/tcp # allow specific HTTPS port
-  - ufw allow 80/tcp # allow specific HTTP port
-
-  # allow specific coolify ports
+  - ufw allow 80/tcp
+  - ufw allow 443/tcp
   - ufw allow 6001/tcp
   - ufw allow 6002/tcp
   - ufw allow 8000/tcp
@@ -92,4 +97,4 @@ runcmd:
   - ufw --force enable
   - systemctl restart fail2ban ssh
 
-  - env ROOT_USERNAME="${username}" ROOT_USER_EMAIL="${email}" ROOT_USER_PASSWORD="${password}" bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'
+  - env ROOT_USERNAME="${coolify_username}" ROOT_USER_EMAIL="${coolify_email}" ROOT_USER_PASSWORD="${coolify_password}" bash -c 'curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash'

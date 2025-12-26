@@ -1,6 +1,7 @@
 #cloud-config
 
 timezone: Europe/Paris
+hostname: codespace
 
 package_update: true
 package_upgrade: true
@@ -51,6 +52,7 @@ write_files:
     permissions: "0o644"
 
 runcmd:
+  - ufw --force reset
   - ufw default deny incoming # block all incoming requests
   - ufw default allow outgoing # allow all outgoing requests
 
@@ -58,8 +60,8 @@ runcmd:
   - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
 
   # limit exposed connections between docker containers
-  - ufw allow in on docker0 to any port 80,443 proto tcp
-  - ufw allow out on docker0
+  # - ufw allow in on docker0 to any port 80,443 proto tcp
+  # - ufw allow out on docker0
 
   - ufw --force enable
   - systemctl restart fail2ban sshd
