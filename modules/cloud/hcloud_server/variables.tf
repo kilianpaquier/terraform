@@ -64,12 +64,6 @@ variable "server_type" {
   description = "Hetzner Cloud server type (cx23, etc.)"
 }
 
-variable "user_data" {
-  type        = string
-  description = "Cloud Init userdata"
-  default     = null
-}
-
 variable "server_name" {
   type        = string
   description = "Server name"

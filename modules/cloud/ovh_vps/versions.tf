@@ -11,7 +11,7 @@ terraform {
     # imported module, unnecessary to specify its version
     # tflint-ignore: terraform_required_providers
     sops = {
-      source  = "carlpett/sops"
+      source = "carlpett/sops"
     }
   }
 }
