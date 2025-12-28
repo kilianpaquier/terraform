@@ -154,11 +154,11 @@ resource "gitlab_group_service_account_access_token" "access_tokens" {
     #   name    = "renovate[bot]"
     #   scopes  = ["api", "self_rotate", "write_repository"]
     # }
-    "terraform" = {
-      user_id = gitlab_group_service_account.service_accounts["terraform"].service_account_id
-      name    = "terraform[bot]"
-      scopes  = ["api", "self_rotate"]
-    }
+    # "terraform" = {
+    #   user_id = gitlab_group_service_account.service_accounts["terraform"].service_account_id
+    #   name    = "terraform[bot]"
+    #   scopes  = ["api", "self_rotate"]
+    # }
   }
 
   group   = gitlab_group.kilianpaquier.id

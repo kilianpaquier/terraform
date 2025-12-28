@@ -1,6 +1,7 @@
 resource "github_repository" "go-builder-generator" {
   name        = "go-builder-generator"
   description = "Easily generate builders for golang structs"
+  visibility  = "public"
 
   has_discussions = true
   has_downloads   = false

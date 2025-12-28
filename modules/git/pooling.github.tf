@@ -1,6 +1,7 @@
 resource "github_repository" "pooling" {
   name        = "pooling"
   description = "Easily dispatch functions (and subfunctions indefinitely) into a shared pool of routines in golang"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = true

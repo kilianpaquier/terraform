@@ -26,7 +26,7 @@ resource "gitlab_project" "dotfiles" {
   model_registry_access_level          = "disabled"
   monitor_access_level                 = "disabled"
   pages_access_level                   = "disabled"
-  releases_access_level                = "enabled"
+  releases_access_level                = "disabled"
   repository_access_level              = "enabled"
   requirements_access_level            = "disabled"
   security_and_compliance_access_level = "enabled"

@@ -61,6 +61,11 @@ locals {
       name        = "question"
     },
     {
+      color       = "#EDEDED"
+      description = "Indicates that a pull request or issue has been released"
+      name        = "released"
+    },
+    {
       color       = "#5319E7"
       description = "This was made by renovatebot"
       name        = "renovate"

@@ -77,6 +77,8 @@ module "gitlab_renovate" {
   source  = "./gitlab"
   project = gitlab_project.renovate.id
 
+  protected_branches = ["main"]
+
   variables = [
     {
       key         = "GITHUB_COM_TOKEN"

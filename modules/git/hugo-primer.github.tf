@@ -1,6 +1,7 @@
 resource "github_repository" "hugo-primer" {
   name        = "hugo-primer"
   description = "Extensible Hugo theme based on Primer, the Design System for GitHub"
+  visibility  = "public"
 
   has_discussions = true
   has_downloads   = false

@@ -1,6 +1,7 @@
 resource "github_repository" "compare" {
   name        = "compare"
   description = "Compare files and directories with Golang internal diff library"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = true

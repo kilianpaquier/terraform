@@ -1,6 +1,7 @@
 resource "github_repository" "website" {
   name        = "website"
   description = "Personal portfolio"
+  visibility  = "public"
 
   has_discussions = true
   has_downloads   = false

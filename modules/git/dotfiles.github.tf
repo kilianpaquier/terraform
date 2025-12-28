@@ -1,6 +1,7 @@
 resource "github_repository" "dotfiles" {
   name        = "dotfiles"
   description = "My dotfiles tests and final configuration"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = false

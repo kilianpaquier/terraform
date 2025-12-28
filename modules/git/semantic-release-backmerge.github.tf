@@ -1,6 +1,7 @@
 resource "github_repository" "semantic-release-backmerge" {
   name        = "semantic-release-backmerge"
   description = "Backmerge feature for semantic-release with automatic PR creation when a conflict is identified. Available for GitHub, GitLab, Bitbucket and Gitea"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = true

@@ -1,6 +1,7 @@
 resource "github_repository" "zsh-plugins" {
   name        = "zsh-plugins"
   description = "A bunch of ZSH plugins that also acts as installation plugins to avoid running an installation script"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = true

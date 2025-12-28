@@ -1,6 +1,7 @@
 resource "github_repository" "zsh-customs" {
   name        = "zsh-customs"
   description = "Handle multiple ZSH_CUSTOM at once"
+  visibility  = "public"
 
   has_downloads = false
   has_issues    = false
