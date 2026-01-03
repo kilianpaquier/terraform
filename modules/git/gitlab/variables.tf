@@ -44,6 +44,16 @@ variable "protected_branches" {
   default = []
 }
 
+variable "schedules" {
+  type = list(object({
+    cron        = string
+    description = string
+    name        = string
+    ref         = string
+  }))
+  default = []
+}
+
 variable "variables" {
   type = list(object({
     description = string

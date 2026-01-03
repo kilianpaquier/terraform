@@ -15,7 +15,7 @@ exclude:
   - shell
 license: mit
 maintainers:
-  - name: kilianpaquier
+  - name: u.kilianpaquier
 platform: gitlab
 terraform:
   engine: opentofu

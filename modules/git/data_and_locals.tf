@@ -1,4 +1,13 @@
+#####################################################
+#
+# Locals
+#
+#####################################################
+
 locals {
+  branch_name_regexp    = "^(alpha|beta|dev|develop|main|next|rc|staging|v[0-9]+(\\.[0-9]+)?\\.x|(chore|docs|feat|fix|release)\\/[\\w-]+)$"
+  commit_message_regexp = ""
+
   labels = [
     {
       color       = "#B60205"
@@ -49,6 +58,11 @@ locals {
       color       = "#E4E669"
       description = "This doesn't seem right"
       name        = "invalid"
+    },
+    {
+      color       = "#09AD9D"
+      description = "This was made by kickrbot"
+      name        = "kickr"
     },
     {
       color       = "#B60205"
