@@ -58,10 +58,30 @@ resource "gitlab_pipeline_schedule" "schedules" {
 
   active         = true
   cron           = each.value.cron
-  cron_timezone  = "Europe/Paris"
+  cron_timezone  = each.value.timezone
   description    = each.value.description
   ref            = each.value.ref
   take_ownership = true
+}
+
+resource "gitlab_pipeline_schedule_variable" "variables" {
+  depends_on = [gitlab_pipeline_schedule.schedules]
+  for_each = merge([
+    for schedule in var.schedules : {
+      for variable in schedule.variables : "${schedule.name}-${variable.key}" => {
+        key                  = variable.key
+        pipeline_schedule_id = gitlab_pipeline_schedule.schedules[schedule.name].pipeline_schedule_id
+        value                = variable.value
+      }
+    }
+  ]...)
+
+  pipeline_schedule_id = each.value.pipeline_schedule_id
+  project              = var.project
+
+  key           = each.value.key
+  value         = each.value.value
+  variable_type = "env_var"
 }
 
 resource "gitlab_project_variable" "variables" {

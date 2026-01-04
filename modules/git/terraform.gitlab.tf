@@ -79,4 +79,13 @@ module "gitlab_terraform" {
     token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
     url   = github_repository.terraform.http_clone_url
   }
+
+  schedules = [
+    {
+      cron        = "0 12 * * *"
+      description = "Scheduled pipeline for kickr layout updates"
+      name        = "kickr"
+      ref         = "refs/heads/main"
+    }
+  ]
 }

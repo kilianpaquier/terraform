@@ -74,6 +74,15 @@ module "gitlab_compare" {
     url   = github_repository.compare.http_clone_url
   }
 
+  schedules = [
+    {
+      cron        = "0 12 * * *"
+      description = "Scheduled pipeline for kickr layout updates"
+      name        = "kickr"
+      ref         = "refs/heads/main"
+    }
+  ]
+
   variables = [
     {
       key         = "GITLAB_TOKEN"

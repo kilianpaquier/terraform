@@ -50,6 +50,11 @@ variable "schedules" {
     description = string
     name        = string
     ref         = string
+    timezone    = optional(string, "Europe/Paris")
+    variables = optional(list(object({
+      key   = string
+      value = string
+    })), [])
   }))
   default = []
 }

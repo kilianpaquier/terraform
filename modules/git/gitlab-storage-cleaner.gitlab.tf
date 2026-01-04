@@ -74,6 +74,15 @@ module "gitlab_gitlab-storage-cleaner" {
 
   protected_branches = ["main"]
 
+  # schedules = [
+  #   {
+  #     cron        = "0 12 * * *"
+  #     description = "Scheduled pipeline for kickr layout updates"
+  #     name        = "kickr"
+  #     ref         = "refs/heads/main"
+  #   }
+  # ]
+
   # mirror = {
   #   token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
   #   url   = github_repository.gitlab-storage-cleaner.http_clone_url
