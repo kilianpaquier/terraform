@@ -82,15 +82,4 @@ module "gitlab_compare" {
       ref         = "refs/heads/main"
     }
   ]
-
-  variables = [
-    {
-      key         = "GITLAB_TOKEN"
-      description = gitlab_group_access_token.access_tokens["release"].description
-      protected   = true
-      raw         = false
-      sensitive   = false
-      value       = "$${RELEASE_TOKEN}"
-    }
-  ]
 }
