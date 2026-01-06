@@ -5,7 +5,7 @@ include:
   # semantic-release template
   # https://gitlab.com/to-be-continuous/semantic-release
   - project: to-be-continuous/semantic-release
-    ref: e32f092873147606d5cb198bba45b470e4826649 # 4.0.1
+    ref: e8ff414e33e526b2b2117c599982f35b0c109fa9 # 4.0.2
     file: templates/gitlab-ci-semrel.yml
 
 variables:
@@ -18,6 +18,15 @@ variables:
   SEMREL_RELEASE_DISABLED: "true"
   SEMREL_REQUIRED_PLUGINS_FILE: .gitlab/semrel-plugins.txt
   SEMREL_TAG_FORMAT: v$${version}
+
+# see https://gitlab.com/to-be-continuous/semantic-release/-/blob/master/templates/gitlab-ci-semrel.yml?ref_type=heads#L150
+workflow:
+  rules:
+    - !reference [.tbc-workflow-rules, default]
+    # completely disable branches pipelines
+    - if: '$CI_COMMIT_BRANCH && $CI_COMMIT_REF_PROTECTED != "true" && $CI_COMMIT_REF_NAME !~ $PROD_REF && $CI_COMMIT_REF_NAME !~ $INTEG_REF'
+      when: never
+    - when: always
 
 # override TBC adaptive pipeline in favor of disabling test jobs on schedule pipelines
 .test-policy:
@@ -40,6 +49,7 @@ variables:
 semantic-release-info:
   variables:
     GIT_DEPTH: "0"
+    GITLAB_TOKEN: $RELEASE_TOKEN
   script:
     - DESCRIBE=$(git describe --tags || echo "v1.0.0")
     - echo "SEMREL_INFO_NEXT_VERSION=v${DESCRIBE#v}" >> "$SEMREL_CONFIG_DIR/semrel.out.env"
