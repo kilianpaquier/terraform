@@ -17,9 +17,9 @@ variable "cloudinit" {
   description = "Cloud Init configuration. Templating will be made inside the module with data being a merge of all provided cloudinit.vars.sops_keys key/value and cloudinit.vars.raw map"
 }
 
-variable "datacenter" {
+variable "location" {
   type        = string
-  description = "Server datacenter location (nbg1-dc3, etc.)"
+  description = "Server location (nbg1-dc3, etc.)"
 }
 
 variable "dns_records" {

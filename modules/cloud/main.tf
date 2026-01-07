@@ -202,8 +202,8 @@ module "coolify_vps" {
 #   source      = "./hcloud_server"
 #   server_name = "coolify"
 
-#   datacenter  = "nbg1-dc3"
 #   image       = "ubuntu-24.04"
+#   location    = "nbg1-dc3"
 #   server_type = "cx23"
 
 #   labels             = ["dns", "https", "ping", "ssh"]

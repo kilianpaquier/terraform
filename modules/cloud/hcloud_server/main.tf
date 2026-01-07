@@ -9,9 +9,9 @@ resource "hcloud_server" "default" {
     ignore_changes = [ssh_keys, user_data]
   }
 
-  name        = var.server_name
-  datacenter  = var.datacenter
   image       = var.image
+  location    = var.location
+  name        = var.server_name
   server_type = var.server_type
 
   allow_deprecated_images  = false
