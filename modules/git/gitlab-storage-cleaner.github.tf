@@ -55,18 +55,7 @@ module "github_gitlab-storage-cleaner" {
   source     = "./github"
   repository = github_repository.gitlab-storage-cleaner.name
 
-  actions_disabled = false
+  actions_disabled = true
   default_branch   = "main"
   labels           = local.labels
-
-  environments = [
-    { environment = "docker" },
-    {
-      environment        = "kickr"
-      protected_branches = true
-      secrets            = [{ secret_name = "KICKR_PRIVATE_KEY", plaintext_value = data.sops_file.sops["github"].data["kickr_private_key"] }]
-    },
-    { environment = "release", protected_branches = true }
-  ]
-  secrets = [{ secret_name = "CODECOV_TOKEN", plaintext_value = data.sops_file.sops["gitlab"].data["codecov_token"] }]
 }
