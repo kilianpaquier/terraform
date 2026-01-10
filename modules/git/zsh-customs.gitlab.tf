@@ -8,8 +8,8 @@ resource "gitlab_project" "zsh-customs" {
 
   archive_on_destroy      = true
   keep_latest_artifact    = true
-  merge_pipelines_enabled = false
-  merge_trains_enabled    = false
+  merge_pipelines_enabled = true
+  merge_trains_enabled    = true
   packages_enabled        = false
   public_jobs             = false
 
