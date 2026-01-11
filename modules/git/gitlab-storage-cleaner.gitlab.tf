@@ -13,16 +13,10 @@ resource "gitlab_project" "gitlab-storage-cleaner" {
   packages_enabled        = false
   public_jobs             = false
 
-  import_url                          = "https://github.com/kilianpaquier/gitlab-storage-cleaner.git"
-  mirror                              = true
-  mirror_overwrites_diverged_branches = true
-  mirror_trigger_builds               = true
-  only_mirror_protected_branches      = true
-
   analytics_access_level               = "disabled"
   builds_access_level                  = "enabled"
-  container_registry_access_level      = "enabled"
-  environments_access_level            = "enabled"
+  container_registry_access_level      = "disabled"
+  environments_access_level            = "disabled"
   feature_flags_access_level           = "disabled"
   forking_access_level                 = "enabled"
   infrastructure_access_level          = "disabled"

@@ -3,7 +3,6 @@ resource "github_repository" "gitlab-storage-cleaner" {
   description = "Easily clean gitlab maintained repositories storage (jobs artifacts only) with a simple command"
   visibility  = "public"
 
-  has_discussions = true
   has_downloads   = false
   has_issues      = true
 
