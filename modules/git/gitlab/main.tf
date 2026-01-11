@@ -115,3 +115,10 @@ resource "gitlab_project_variable" "variables" {
   value             = sensitive(each.value.value)
   variable_type     = "env_var"
 }
+
+resource "gitlab_tag_protection" "tags" {
+  project = var.project
+
+  create_access_level = "maintainer"
+  tag                 = "*"
+}
