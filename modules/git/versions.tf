@@ -6,12 +6,12 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = "6.9.1"
+      version = "6.10.1"
     }
 
     gitlab = {
       source  = "gitlabhq/gitlab"
-      version = "18.7.0"
+      version = "18.8.0"
     }
 
     sops = {
