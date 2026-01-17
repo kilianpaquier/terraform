@@ -50,11 +50,6 @@ variable "secret_scanning" {
   default = "enabled"
 }
 
-variable "advanced_security" {
-  type    = string
-  default = "enabled"
-}
-
 variable "secret_scanning_push_protection" {
   type    = string
   default = "enabled"
