@@ -45,7 +45,7 @@ resource "github_actions_repository_permissions" "disabled" {
 }
 
 resource "github_actions_repository_permissions" "enabled" {
-  count      = !var.actions_disabled ? 1 : 0
+  count      = var.actions_disabled ? 0 : 1
   repository = var.repository
 
   enabled         = true
@@ -75,10 +75,38 @@ resource "github_actions_variable" "variables" {
   value         = each.value
 }
 
-resource "github_branch_default" "default" {
+resource "github_branch_default" "default_branch" {
   branch     = var.default_branch
   repository = var.repository
   rename     = true
+}
+
+resource "github_branch_protection" "branch_protections" {
+  for_each = { for protected_branch in var.protected_branches : protected_branch.name => protected_branch }
+
+  pattern       = each.key
+  repository_id = var.repository
+
+  allows_deletions                = false
+  allows_force_pushes             = false
+  enforce_admins                  = false
+  require_conversation_resolution = true
+  require_signed_commits          = false
+  required_linear_history         = true
+
+  dynamic "required_pull_request_reviews" {
+    for_each = each.value.required_pull_request_reviews ? [0] : []
+    content {
+      dismiss_stale_reviews           = true
+      require_code_owner_reviews      = true
+      require_last_push_approval      = true
+      required_approving_review_count = 1
+    }
+  }
+
+  required_status_checks {
+    strict = true
+  }
 }
 
 resource "github_issue_labels" "labels" {

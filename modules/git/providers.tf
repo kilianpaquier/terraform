@@ -1,5 +1,3 @@
-provider "external" {}
-
 provider "github" {
   owner = "kilianpaquier"
   token = data.sops_file.sops["github"].data["terraform_token"]

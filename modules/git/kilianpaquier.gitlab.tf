@@ -29,13 +29,14 @@ resource "gitlab_group" "kilianpaquier" {
   }
 
   push_rules {
-    branch_name_regex    = local.branch_name_regexp
-    commit_message_regex = local.commit_message_regexp
+    branch_name_regex    = local.branch_name_regex
+    commit_message_regex = local.commit_message_regex
 
     deny_delete_tag         = true
+    max_file_size           = 25
     prevent_secrets         = true
     reject_non_dco_commits  = true
-    reject_unsigned_commits = true
+    reject_unsigned_commits = false
   }
 }
 

@@ -39,13 +39,12 @@ variable "labels" {
   default = []
 }
 
-variable "webhook" {
-  type = object({
-    secret = string
-    url    = string
-  })
-  default  = null
-  nullable = true
+variable "protected_branches" {
+  type = list(object({
+    name                          = string
+    required_pull_request_reviews = optional(bool, false)
+  }))
+  default = []
 }
 
 variable "repository" {
@@ -68,4 +67,13 @@ variable "variables" {
     value         = string
   }))
   default = []
+}
+
+variable "webhook" {
+  type = object({
+    secret = string
+    url    = string
+  })
+  default  = null
+  nullable = true
 }
