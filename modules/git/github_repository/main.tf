@@ -5,7 +5,6 @@ resource "github_repository" "default" {
   homepage_url = var.homepage_url
 
   has_discussions = var.has_discussions
-  has_downloads   = false
   has_issues      = var.has_issues
   has_projects    = var.has_projects
   has_wiki        = var.has_wiki
