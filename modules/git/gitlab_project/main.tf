@@ -70,7 +70,7 @@ resource "gitlab_project" "default" {
     deny_delete_tag         = true
     max_file_size           = 25
     prevent_secrets         = true
-    reject_non_dco_commits  = true
+    reject_non_dco_commits  = false
     reject_unsigned_commits = false
   }
 }
