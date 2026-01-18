@@ -5,7 +5,7 @@
 #####################################################
 
 locals {
-  branch_name_regex    = "^(alpha|beta|dev|develop|main|next|rc|staging|v[0-9]+(\\.[0-9]+)?\\.x|(chore|docs|feat|fix|release)\\/[\\w-]+)$"
+  branch_name_regex    = "^(alpha|beta|dev|develop|main|next|rc|staging|v[0-9]+(\\.[0-9]+)?\\.x|(chore|docs|feat|fix|kickr|release|renovate)\\/[\\w-]+)$"
   commit_message_regex = ""
 
   labels = [
