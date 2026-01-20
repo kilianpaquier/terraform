@@ -45,6 +45,12 @@ module "gitlab_project_settings_renovate" {
       description = "Scheduled pipeline for kickr layout updates and Renovate maintainance"
       name        = "kickr-renovate"
       ref         = "refs/heads/main"
+      variables = [
+        {
+          key   = "KICKR_DISABLED"
+          value = "true"
+        }
+      ]
     }
   ]
 

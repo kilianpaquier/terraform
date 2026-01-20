@@ -45,6 +45,7 @@ module "gitlab_project_settings_zsh-plugins" {
 
   schedules = [
     {
+      active      = false
       cron        = "0 12 * * *"
       description = "Scheduled pipeline for kickr layout updates"
       name        = "kickr"

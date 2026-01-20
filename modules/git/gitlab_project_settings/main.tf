@@ -56,7 +56,7 @@ resource "gitlab_pipeline_schedule" "schedules" {
   for_each = { for schedule in var.schedules : schedule.name => schedule }
   project  = var.project
 
-  active         = true
+  active         = each.value.active
   cron           = each.value.cron
   cron_timezone  = each.value.timezone
   description    = each.value.description

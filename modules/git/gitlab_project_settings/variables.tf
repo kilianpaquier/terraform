@@ -46,6 +46,7 @@ variable "protected_branches" {
 
 variable "schedules" {
   type = list(object({
+    active      = optional(bool, true)
     cron        = string
     description = string
     name        = string
