@@ -11,12 +11,12 @@ terraform {
 
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "1.59.0"
+      version = "1.60.0"
     }
 
     ovh = {
       source  = "ovh/ovh"
-      version = "2.10.0"
+      version = "2.11.0"
     }
 
     sops = {
