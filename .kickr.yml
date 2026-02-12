@@ -5,12 +5,6 @@ ci:
   provider: gitlab
   options:
     - kickr
-  terraform:
-    apply: manual
-    environments:
-      - production
-dependencies:
-  manager: renovate
 exclude:
   - shell
 license: mit
@@ -18,7 +12,10 @@ maintainers:
   - name: u.kilianpaquier
 platform: gitlab
 terraform:
+  apply: manual
   engine: opentofu
+  environments:
+    - production
   modules:
-    - modules/git
     - modules/cloud
+    - modules/git

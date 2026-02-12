@@ -2,7 +2,7 @@ codecov_token: ENC[AES256_GCM,data:yVHkGxed/42oT/Fr6KLZhaH4tR9K560sRb+OLdjbCqoxP
 github_com_token: ENC[AES256_GCM,data:hxGvkPg22g+FTash/QSQ7RWW3zedhkULVg52L3RdX1uUI6zPYlpM4g==,iv:ATcv//lfWO8KbhXLcOprH5zDneQWsyhX/62579RMp2I=,tag:vO3HIN3tFEPsogFwl0uAAA==,type:str]
 github_mirror_token: ENC[AES256_GCM,data:0yO3VDVf/3iuXC/sCsQB0fykwaso89I8y0Pk3APzJckRuNuSpkUXlr3P7uVM1/9LFqkcvAhExKlrDKTKsBuKeiwNO1GYzbaxIy91e6aCq20GqSKDQFQTTRpvsPqA,iv:+brh+yGC1g1jDibFyLh4OrXIPrEihySsQy0ZBkR5h0s=,tag:ACbd6eg2K5lbsqzm2JKF+g==,type:str]
 terraform_token: ENC[AES256_GCM,data:TxUsVaK/gPKLJHrz+eGqcgZfpcaLtc3cIcyveWgrTvrfVHMXhyfF5A5Dx4zLqd0ECDoZFueFATLe,iv:Sa8jAmMdvrpvPulXmiE2QjKudtca1Bmnpm95BTA5H4U=,tag:xdg3G6Nm1onGqkLKZy5gpA==,type:str]
-netlify_auth_token: ENC[AES256_GCM,data:eZeLcBtg0ldCcdvUweQiEB9Dlwb1nC+Qt1iJs+8ND6MZCNbazzfMxw==,iv:CqM0fJLqLIJm3z6sUoBff8LssgdBkbtOYkyJYsfRN18=,tag:p/skpyPww48C6SO+kZd8GQ==,type:str]
+netlify_auth_token: ENC[AES256_GCM,data:x2oBYDYek6GA2f3jR1Mr3vvTC8KL+vEozN7SWL7N40V4zPhsmjT4Sg==,iv:poC2e5og0KD+V69dHSW6kxqwAOGy9iExw3zRQzYgwqw=,tag:bhyJXp/JJkHD2MOoV91bfA==,type:str]
 sops:
     age:
         - recipient: age1j06cwedktsxq2rq9e7tgvet2049vhkwdwx7p5ddmc3v402axk92qka580y
@@ -14,7 +14,7 @@ sops:
             UmJTa3Bjd1pnNHZhbm12WGliZVc0MDAKCMSxVWDk0F1r4MFY/qvcJIKyKL4DLJw/
             Dm+jHgLg7JA2bQ/msZYrE+gejqLido8lzwYlBHsh2U+ngGbKgySF/w==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-12-27T10:48:31Z"
-    mac: ENC[AES256_GCM,data:gC3+A+nz7xQwpiHyK3AnmV0JuPXD6oftFcebIhVtW8vLrldrD1JhDpjuz3mAuqlmZ/KZzy+Dh1lE1MIE6ejzTuRtpJ55g5X49FI+Tc2YDMpvWV2Cj4CyTl42U/eYlXq9RkjNnPhcSK/Dt7zf/Bo7ofPFOA4DsdjuDtj0Wf4rXm0=,iv:rw1O6D0MzYCuTrEa+m2lS0U791wL2BmFkr+DtDSa0H8=,tag:dNO7PD8q3feQ86WR1yFx3Q==,type:str]
+    lastmodified: "2026-01-31T22:46:07Z"
+    mac: ENC[AES256_GCM,data:sNO1ChzOTmvvmN4AwMCeTXY0FGCss++ffuCipC3VHWEsuk3VQG4w7vFDJOVjAOYpwQHKoDM5O3nHVKNPa5VIY6HJ3KV0t6zA/5XZVJi31QvFMPVW9JVVFZ8lBROojqfGC6wqSn2oTAXeeTjQmVY2EP0V7ixeTBUwULjJj7whYcw=,iv:cU1gFNN7bmX45Vcmfivvktfdc/BrwKDV7Xm7k9gvmJY=,tag:fbtZ0LxqDKPFUOQiqT6ftA==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

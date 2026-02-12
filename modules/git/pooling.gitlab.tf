@@ -28,7 +28,6 @@ module "gitlab_project_pooling" {
 module "gitlab_project_settings_pooling" {
   depends_on = [
     module.github_repository_pooling,
-    gitlab_group_access_token.access_tokens["release"],
     module.gitlab_project_pooling
   ]
   source = "./gitlab_project_settings"

@@ -6,7 +6,6 @@ module "gitlab_project_semantic-release-backmerge" {
 
   default_branch   = "main"
   description      = "Backmerge feature for semantic-release with automatic PR creation when a conflict is identified. Available for GitHub, GitLab, Bitbucket and Gitea"
-  mirror           = "https://github.com/kilianpaquier/semantic-release-backmerge.git"
   visibility_level = "public"
 
   analytics_access_level          = "disabled"
@@ -36,18 +35,18 @@ module "gitlab_project_settings_semantic-release-backmerge" {
   project            = module.gitlab_project_semantic-release-backmerge.id
   protected_branches = ["main"]
 
-  # schedules = [
-  #   {
-  #     active      = false
-  #     cron        = "0 12 * * *"
-  #     description = "Scheduled pipeline for kickr layout updates"
-  #     name        = "kickr"
-  #     ref         = "refs/heads/main"
-  #   }
-  # ]
+  schedules = [
+    {
+      active      = false
+      cron        = "0 12 * * *"
+      description = "Scheduled pipeline for kickr layout updates"
+      name        = "kickr"
+      ref         = "refs/heads/main"
+    }
+  ]
 
-  # mirror = {
-  #   token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
-  #   url   = module.github_repository_semantic-release-backmerge.http_clone_url
-  # }
+  mirror = {
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
+    url   = module.github_repository_semantic-release-backmerge.http_clone_url
+  }
 }

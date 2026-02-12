@@ -22,14 +22,14 @@ lint:
 lint-fix:
 	@ARGS="--fix" make -s lint
 
-plan-modules-git:
-	@tofu -chdir=modules/git plan
-
-test-modules-git:
-	@tofu -chdir=modules/git test
-
 plan-modules-cloud:
 	@tofu -chdir=modules/cloud plan
 
 test-modules-cloud:
 	@tofu -chdir=modules/cloud test
+
+plan-modules-git:
+	@tofu -chdir=modules/git plan
+
+test-modules-git:
+	@tofu -chdir=modules/git test

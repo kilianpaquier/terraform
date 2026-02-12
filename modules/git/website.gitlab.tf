@@ -29,7 +29,6 @@ module "gitlab_project_website" {
 module "gitlab_project_settings_website" {
   depends_on = [
     module.github_repository_website,
-    gitlab_group_access_token.access_tokens["release"],
     module.gitlab_project_website
   ]
   source = "./gitlab_project_settings"

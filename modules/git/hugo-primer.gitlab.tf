@@ -27,7 +27,6 @@ module "gitlab_project_hugo-primer" {
 module "gitlab_project_settings_hugo-primer" {
   depends_on = [
     module.github_repository_hugo-primer,
-    gitlab_group_access_token.access_tokens["release"],
     module.gitlab_project_hugo-primer
   ]
   source = "./gitlab_project_settings"

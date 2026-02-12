@@ -28,7 +28,6 @@ module "gitlab_project_compare" {
 module "gitlab_project_settings_compare" {
   depends_on = [
     module.github_repository_compare,
-    gitlab_group_access_token.access_tokens["release"],
     module.gitlab_project_compare
   ]
   source = "./gitlab_project_settings"
