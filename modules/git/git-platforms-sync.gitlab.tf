@@ -4,7 +4,7 @@ module "gitlab_project_git-platforms-sync" {
   namespace_id = gitlab_group.kilianpaquier.id
   name         = "git-platforms-sync"
 
-  default_branch   = "main"
+  default_branch   = "beta"
   description      = "Synchronize your whole repositories on multiple platforms, issues, pull requests, releases, wiki between multiple Git platforms (GitHub, GitLab, etc.)"
   visibility_level = "public"
 
