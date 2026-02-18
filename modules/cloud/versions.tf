@@ -6,22 +6,22 @@ terraform {
   required_providers {
     cloudinit = {
       source  = "hashicorp/cloudinit"
-      version = "2.3.7"
+      version = "< 3.0.0"
     }
 
     hcloud = {
       source  = "hetznercloud/hcloud"
-      version = "1.60.0"
+      version = "< 2.0.0"
     }
 
     ovh = {
       source  = "ovh/ovh"
-      version = "2.11.0"
+      version = "< 3.0.0"
     }
 
     sops = {
       source  = "carlpett/sops"
-      version = "1.3.0"
+      version = "< 2.0.0"
     }
   }
 }

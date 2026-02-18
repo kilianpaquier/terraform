@@ -6,17 +6,17 @@ terraform {
   required_providers {
     github = {
       source  = "integrations/github"
-      version = "6.11.1"
+      version = "< 7.0.0"
     }
 
     gitlab = {
       source  = "gitlabhq/gitlab"
-      version = "18.8.2"
+      version = "< 19.0.0"
     }
 
     sops = {
       source  = "carlpett/sops"
-      version = "1.3.0"
+      version = "< 2.0.0"
     }
   }
 }

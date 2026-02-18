@@ -19,7 +19,7 @@ variable "cloudinit" {
 
 variable "location" {
   type        = string
-  description = "Server location (nbg1-dc3, etc.)"
+  description = "Server location (nbg1-dc3, fsn1-dc14, etc.). More at https://docs.hetzner.com/cloud/general/locations/#what-datacenters-are-there"
 }
 
 variable "dns_records" {
@@ -29,6 +29,18 @@ variable "dns_records" {
   }))
   default     = []
   description = "List of DNS records to set with OVH domain zone"
+}
+
+variable "firewalls" {
+  type = list(object({
+    description     = optional(string, null)
+    destination_ips = optional(set(string), null)
+    port            = optional(string, null)
+    direction       = string
+    protocol        = string
+    source_ips      = optional(set(string), null)
+  }))
+  default = []
 }
 
 variable "image" {
@@ -42,10 +54,29 @@ variable "labels" {
   description = "Server labels"
 }
 
+variable "networks" {
+  type = list(object({
+    alias_ips  = optional(set(string), null)
+    ip         = optional(string, null)
+    network_id = number
+  }))
+  default     = []
+  description = "Private networks to connect to the private server"
+}
+
 variable "placement_group_id" {
   type        = number
   default     = null
   description = "Hetzner Cloud placement group in case this server must be close to others"
+}
+
+variable "public_net" {
+  type = object({
+    ipv4_enabled = optional(bool, true)
+    ipv6_enabled = optional(bool, true)
+  })
+  default     = {}
+  description = "Public network configuration, whether to enable public access to the server or not (default yes)"
 }
 
 variable "protected" {
@@ -67,4 +98,9 @@ variable "server_type" {
 variable "server_name" {
   type        = string
   description = "Server name"
+}
+
+variable "user_data" {
+  type    = string
+  default = null
 }

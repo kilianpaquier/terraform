@@ -1,20 +1,12 @@
 #!/bin/bash
 
-PWD="$(pwd)"
-REL="$PWD"
-while [ "$REL" != "/" ]; do
-  if [ -d "$REL/.git" ]; then
-    break
-  fi
-  REL="$(dirname "$REL")"
-done
-DIR_NAME="$(realpath --relative-to="$REL" "$PWD")"
+[ -n "$1" ] || { echo "No state name provided"; exit 2; }
 
 # initalize HTTP state with GitLab Terraform State
 # copied from https://gitlab.com/to-be-continuous/terraform#how-to-use-gitlab-backend-in-your-development-environment-
 
 MY_PROJECT_PATH="kilianpaquier/terraform"
-TF_STATE_NAME="$(echo -n "$DIR_NAME" | sha256sum | cut -c -8).production"
+TF_STATE_NAME="$1"
 TF_HTTP_PASSWORD="$GITLAB_TOKEN"
 
 CI_API_V4_URL=https://gitlab.com/api/v4

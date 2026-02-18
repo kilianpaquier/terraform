@@ -28,6 +28,18 @@ resource "hcloud_firewall" "firewalls" {
   }
 }
 
+resource "hcloud_network" "codespace" {
+  name     = "codespace"
+  ip_range = "10.0.0.0/16"
+}
+
+resource "hcloud_network_subnet" "codespace" {
+  ip_range     = "10.0.0.0/16"
+  network_id   = hcloud_network.codespace.id
+  network_zone = "eu-central"
+  type         = "cloud"
+}
+
 resource "hcloud_placement_group" "default" {
   name = "default"
   type = "spread"
@@ -96,137 +108,65 @@ module "codespace_vps" {
   source      = "./ovh_vps"
   server_name = "codespace"
 
-  # ovh_subsidiary = data.ovh_order_cart.subsidiary.ovh_subsidiary
-  # plan = {
-  #   datacenter   = "GRA"
-  #   duration     = "P1M"
-  #   os           = "Debian 13"
-  #   plan_code    = "vps-2025-model1"
-  # }
+  public_key = module.shared.public_keys.desktop
 
-  # image_id   = "6d9a26f9-3226-46f1-b145-4d87aea9e53f"
-  public_key = module.shared.public_keys.terraform
+  firewalls = concat(local.ovh-firewalls,
+    [
+      {
+        action   = "permit"
+        name     = "ssh"
+        port     = data.sops_file.sops["cloudinit"].data["coolify.ssh_port"]
+        protocol = "tcp"
+        sequence = 1
+      }
+    ],
+    flatten([
+      for firewall in local.firewalls : [
+        for rule in firewall.rules : {
+          action     = "permit"
+          name       = firewall.name
+          port       = lookup(rule, "port", null)
+          protocol   = rule.protocol
+          sequence   = rule.sequence
+          tcp_option = lookup(rule, "tcp_option", null)
+        } if contains(["dns", "ping", "ssh"], firewall.name)
+      ]
+    ])
+  )
+}
 
-  # cloudinit = {
-  #   file                 = "${path.module}/cloudinit/codespace.sh"
-  #   sops_file            = "${path.module}/sops.cloudinit.enc.yml"
-  #   sops_ssh_port        = "terraform_data.ssh_port"
-  #   sops_ssh_private_key = "terraform_data.ssh_private_key"
-  #   sops_ssh_user        = "terraform_data.ssh_user"
-  #   vars = {
-  #     sops_keys = ["ssh_port"]
-  #     raw       = { public_keys = [for key, value in module.shared.public_keys : value] }
-  #   }
-  # }
+module "codespace_server" {
+  depends_on = [
+    hcloud_network_subnet.codespace,
+    hcloud_network.codespace,
+    hcloud_placement_group.default,
+    hcloud_ssh_key.ssh_keys
+  ]
 
-  dns_records = [
+  source      = "./hcloud_server"
+  server_name = "codespace"
+
+  image       = "debian-13"
+  location    = "fsn1"
+  server_type = "cx33"
+
+  placement_group_id = hcloud_placement_group.default.id
+  public_keys        = [for key, value in module.shared.public_keys : key]
+
+  networks = [{ network_id = hcloud_network.codespace.id }]
+  firewalls = [
     {
-      subdomain = "codespace"
-      domain    = ovh_domain_name.dev.domain_name
+      description = "Allow private SSH port"
+      direction   = "in"
+      port        = data.sops_file.sops["cloudinit"].data["codespace.ssh_port"]
+      protocol    = "tcp"
+      source_ips  = ["0.0.0.0/0", "::/0"]
     }
   ]
 
-  firewalls = concat(flatten([
-    for firewall in local.firewalls : [
-      for rule in firewall.rules : {
-        action     = "permit"
-        name       = firewall.name
-        port       = lookup(rule, "port", null)
-        protocol   = rule.protocol
-        sequence   = rule.sequence
-        tcp_option = lookup(rule, "tcp_option", null)
-      } if contains(["dns", "ping", "ssh"], firewall.name)
-  ]]), local.ovh-firewalls)
+  user_data = templatefile("${path.module}/cloudinit/codespace.yml", {
+    public_keys = [for key, value in module.shared.public_keys : value]
+    ssh_port    = data.sops_file.sops["cloudinit"].data["codespace.ssh_port"]
+    ssh_user    = data.sops_file.sops["cloudinit"].data["codespace.ssh_user"]
+  })
 }
-
-module "coolify_vps" {
-  depends_on = [ovh_domain_name.dev]
-
-  source      = "./ovh_vps"
-  server_name = "coolify"
-
-  ovh_subsidiary = data.ovh_order_cart.subsidiary.ovh_subsidiary
-  plan = {
-    datacenter = "GRA"
-    duration   = "P1M"
-    os         = "Ubuntu 24.04"
-    plan_code  = "vps-2025-model1"
-  }
-
-  image_id   = "0da8c70b-7945-4728-a6db-108f28076590"
-  public_key = module.shared.public_keys.terraform
-
-  cloudinit = {
-    file             = "${path.module}/cloudinit/coolify.sh"
-    sops_file        = "${path.module}/sops.cloudinit.enc.yml"
-    sops_private_key = "terraform_private_key"
-    user             = "ubuntu"
-    vars = {
-      sops_keys = ["coolify.email", "coolify.password", "coolify.username", "ssh_port"]
-      raw       = { public_keys = [for key, value in module.shared.public_keys : value] }
-    }
-  }
-
-  dns_records = [
-    {
-      subdomain = "coolify"
-      domain    = ovh_domain_name.dev.domain_name
-    },
-    {
-      subdomain = "*"
-      domain    = ovh_domain_name.dev.domain_name
-    }
-  ]
-
-  firewalls = concat(flatten([
-    for firewall in local.firewalls : [
-      for rule in firewall.rules : {
-        action     = "permit"
-        name       = firewall.name
-        port       = lookup(rule, "port", null)
-        protocol   = rule.protocol
-        sequence   = rule.sequence
-        tcp_option = lookup(rule, "tcp_option", null)
-      } if contains(["dns", "https", "ping", "ssh"], firewall.name)
-  ]]), local.ovh-firewalls)
-}
-
-# module "coolify_server" {
-#   depends_on = [
-#     ovh_domain_name.dev,
-#     hcloud_firewall.firewalls,
-#     hcloud_placement_group.default,
-#     hcloud_ssh_key.ssh_keys
-#   ]
-
-#   source      = "./hcloud_server"
-#   server_name = "coolify"
-
-#   image       = "ubuntu-24.04"
-#   location    = "nbg1-dc3"
-#   server_type = "cx23"
-
-#   labels             = ["dns", "https", "ping", "ssh"]
-#   placement_group_id = hcloud_placement_group.default.id
-#   public_keys        = [for key, value in module.shared.public_keys : key]
-
-#   cloudinit = {
-#     file      = "${path.module}/cloudinit/coolify.yml"
-#     sops_file = "${path.module}/sops.cloudinit.enc.yml"
-#     vars = {
-#       sops_keys = ["coolify.email", "coolify.password", "coolify.username", "ssh_port"]
-#       raw       = { public_keys = [for key, value in module.shared.public_keys : value] }
-#     }
-#   }
-
-#   dns_records = [
-#     # {
-#     #   subdomain = "coolify"
-#     #   domain    = ovh_domain_name.dev.domain_name
-#     # },
-#     # {
-#     #   subdomain = "*"
-#     #   domain    = ovh_domain_name.dev.domain_name
-#     # }
-#   ]
-# }

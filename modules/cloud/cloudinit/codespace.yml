@@ -13,10 +13,10 @@ packages:
   - zsh
 
 users:
-  - gecos: NonRoot
+  - gecos: ${ssh_user}
     groups: adm, docker, plugdev, sudo
-    homedir: /home/nonroot
-    name: nonroot
+    homedir: /home/${ssh_user}
+    name: ${ssh_user}
     shell: /bin/zsh
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
@@ -38,7 +38,7 @@ write_files:
     path: /etc/fail2ban/jail.d/sshd.conf
     permissions: "0o644"
   - content: |
-      AllowUsers nonroot
+      AllowUsers ${ssh_user}
       AuthorizedKeysFile .ssh/authorized_keys
       ChallengeResponseAuthentication no
       KbdInteractiveAuthentication no
@@ -58,10 +58,6 @@ runcmd:
 
   - ufw allow ${ssh_port}/tcp # allow specific SSH port
   - ufw limit ${ssh_port}/tcp # limit multiple connections in small laps of time with different IPs
-
-  # limit exposed connections between docker containers
-  # - ufw allow in on docker0 to any port 80,443 proto tcp
-  # - ufw allow out on docker0
 
   - ufw --force enable
   - systemctl restart fail2ban sshd

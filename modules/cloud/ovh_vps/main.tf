@@ -72,7 +72,7 @@ resource "ovh_domain_zone_record" "default" {
 #
 #####################################################
 
-resource "ovh_ip_firewall" "default" { # FIXME
+resource "ovh_ip_firewall" "default" {
   depends_on = [data.ovh_vps.default]
 
   enabled        = length(var.firewalls) > 0

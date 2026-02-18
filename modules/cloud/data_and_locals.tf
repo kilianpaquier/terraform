@@ -7,17 +7,6 @@
 locals {
   firewalls = [
     {
-      name = "ssh"
-      rules = [
-        {
-          description = "Allow private SSH port"
-          port        = data.sops_file.sops["cloudinit"].data["ssh_port"]
-          protocol    = "tcp"
-          sequence    = 1
-        }
-      ]
-    },
-    {
       name = "known-ssh"
       rules = [
         {
@@ -45,29 +34,29 @@ locals {
         }
       ]
     },
-    {
-      name = "coolify"
-      rules = [
-        {
-          description = "Allow specific coolify port on instance initialization"
-          port        = 6001
-          protocol    = "tcp"
-          sequence    = 5
-        },
-        {
-          description = "Allow specific coolify port on instance initialization"
-          port        = 6002
-          protocol    = "tcp"
-          sequence    = 6
-        },
-        {
-          description = "Allow specific coolify port on instance initialization"
-          port        = 8000
-          protocol    = "tcp"
-          sequence    = 7
-        }
-      ]
-    },
+    # {
+    #   name = "coolify"
+    #   rules = [
+    #     {
+    #       description = "Allow specific coolify port on instance initialization"
+    #       port        = 6001
+    #       protocol    = "tcp"
+    #       sequence    = 5
+    #     },
+    #     {
+    #       description = "Allow specific coolify port on instance initialization"
+    #       port        = 6002
+    #       protocol    = "tcp"
+    #       sequence    = 6
+    #     },
+    #     {
+    #       description = "Allow specific coolify port on instance initialization"
+    #       port        = 8000
+    #       protocol    = "tcp"
+    #       sequence    = 7
+    #     }
+    #   ]
+    # },
     {
       name = "dns"
       rules = [

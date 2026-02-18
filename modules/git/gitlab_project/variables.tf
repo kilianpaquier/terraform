@@ -35,7 +35,7 @@ variable "packages_enabled" {
 
 variable "public_jobs" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "mirror" {

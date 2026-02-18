@@ -25,11 +25,48 @@ resource "hcloud_server" "default" {
   placement_group_id = var.placement_group_id
 
   ssh_keys  = var.public_keys
-  user_data = local.userdata
+  user_data = var.user_data
 
   public_net {
-    ipv4_enabled = true
-    ipv6_enabled = true
+    ipv4_enabled = var.public_net.ipv4_enabled
+    ipv6_enabled = var.public_net.ipv6_enabled
+  }
+
+  dynamic "network" {
+    for_each = { for network in var.networks : network.network_id => network }
+    content {
+      alias_ips  = network.value.alias_ips
+      ip         = network.value.ip
+      network_id = network.key
+    }
+  }
+}
+
+#####################################################
+#
+# Firewalls
+#
+#####################################################
+
+resource "hcloud_firewall" "default" {
+  count      = length(var.firewalls) > 0 ? 1 : 0
+  depends_on = [hcloud_server.default]
+
+  name = var.server_name
+  apply_to {
+    server = hcloud_server.default.id
+  }
+
+  dynamic "rule" {
+    for_each = var.firewalls
+    content {
+      description     = rule.value.description
+      destination_ips = rule.value.destination_ips
+      direction       = rule.value.direction
+      port            = rule.value.port
+      protocol        = rule.value.protocol
+      source_ips      = rule.value.source_ips
+    }
   }
 }
 
