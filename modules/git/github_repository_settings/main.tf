@@ -78,7 +78,6 @@ resource "github_actions_variable" "variables" {
 resource "github_branch_default" "default_branch" {
   branch     = var.default_branch
   repository = var.repository
-  rename     = true
 }
 
 resource "github_branch_protection" "branch_protections" {
