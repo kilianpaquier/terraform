@@ -102,39 +102,6 @@ resource "ovh_domain_zone_record" "storageshare" {
 #
 #####################################################
 
-module "codespace_vps" {
-  depends_on = [ovh_domain_name.dev]
-
-  source      = "./ovh_vps"
-  server_name = "codespace"
-
-  public_key = module.shared.public_keys.desktop
-
-  firewalls = concat(local.ovh-firewalls,
-    [
-      {
-        action   = "permit"
-        name     = "ssh"
-        port     = data.sops_file.sops["cloudinit"].data["coolify.ssh_port"]
-        protocol = "tcp"
-        sequence = 1
-      }
-    ],
-    flatten([
-      for firewall in local.firewalls : [
-        for rule in firewall.rules : {
-          action     = "permit"
-          name       = firewall.name
-          port       = lookup(rule, "port", null)
-          protocol   = rule.protocol
-          sequence   = rule.sequence
-          tcp_option = lookup(rule, "tcp_option", null)
-        } if contains(["dns", "ping", "ssh"], firewall.name)
-      ]
-    ])
-  )
-}
-
 module "codespace_server" {
   depends_on = [
     hcloud_network_subnet.codespace,
