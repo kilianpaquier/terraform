@@ -1,0 +1,5 @@
+misconfigurations:
+  - id: GIT-0001
+    statement: GitHub repository visibility is expected to be public
+  - id: GIT-0004
+    statement: All commits cannot be signed (bot specifically), allowing non-signed commits on protected branches
