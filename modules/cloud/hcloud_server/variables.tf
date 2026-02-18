@@ -4,19 +4,6 @@ variable "backups" {
   description = "Whether backups should be enabled for this server or not"
 }
 
-variable "cloudinit" {
-  type = object({
-    file      = string
-    sops_file = string
-    vars = optional(object({
-      raw       = optional(map(any), {})
-      sops_keys = optional(list(string), [])
-    }), {})
-  })
-  default     = null
-  description = "Cloud Init configuration. Templating will be made inside the module with data being a merge of all provided cloudinit.vars.sops_keys key/value and cloudinit.vars.raw map"
-}
-
 variable "location" {
   type        = string
   description = "Server location (nbg1-dc3, fsn1-dc14, etc.). More at https://docs.hetzner.com/cloud/general/locations/#what-datacenters-are-there"

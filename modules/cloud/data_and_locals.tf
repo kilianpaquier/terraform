@@ -34,29 +34,6 @@ locals {
         }
       ]
     },
-    # {
-    #   name = "coolify"
-    #   rules = [
-    #     {
-    #       description = "Allow specific coolify port on instance initialization"
-    #       port        = 6001
-    #       protocol    = "tcp"
-    #       sequence    = 5
-    #     },
-    #     {
-    #       description = "Allow specific coolify port on instance initialization"
-    #       port        = 6002
-    #       protocol    = "tcp"
-    #       sequence    = 6
-    #     },
-    #     {
-    #       description = "Allow specific coolify port on instance initialization"
-    #       port        = 8000
-    #       protocol    = "tcp"
-    #       sequence    = 7
-    #     }
-    #   ]
-    # },
     {
       name = "dns"
       rules = [
@@ -79,48 +56,6 @@ locals {
       ]
     }
   ]
-
-  ovh-firewalls = [
-    # allow TCP outgoing
-    {
-      action     = "permit"
-      name       = "outgoing"
-      protocol   = "tcp"
-      sequence   = 0
-      tcp_option = "established"
-    },
-    # close all other connections
-    {
-      action   = "deny"
-      name     = "denyall"
-      protocol = "ipv4"
-      sequence = 17
-    },
-    {
-      action   = "deny"
-      name     = "denyall"
-      protocol = "udp"
-      sequence = 18
-    },
-    {
-      action   = "deny"
-      name     = "denyall"
-      protocol = "tcp"
-      sequence = 19
-    }
-  ]
-}
-
-#####################################################
-#
-# OVHcloud
-#
-#####################################################
-
-data "ovh_me" "myaccount" {}
-
-data "ovh_order_cart" "subsidiary" {
-  ovh_subsidiary = data.ovh_me.myaccount.ovh_subsidiary
 }
 
 #####################################################
