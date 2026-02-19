@@ -20,26 +20,40 @@ resource "hcloud_server" "default" {
   shutdown_before_deletion = true
 
   backups            = var.backups
-  keep_disk          = true
+  keep_disk          = var.keep_disk
   labels             = { for label in var.labels : label => "" }
   placement_group_id = var.placement_group_id
 
   ssh_keys  = var.public_keys
   user_data = var.user_data
+}
 
-  public_net {
-    ipv4_enabled = var.public_net.ipv4_enabled
-    ipv6_enabled = var.public_net.ipv6_enabled
-  }
+#####################################################
+#
+# Server networking
+#
+#####################################################
 
-  dynamic "network" {
-    for_each = { for network in var.networks : network.network_id => network }
-    content {
-      alias_ips  = network.value.alias_ips
-      ip         = network.value.ip
-      network_id = network.key
-    }
-  }
+resource "hcloud_primary_ip" "default" {
+  depends_on = [hcloud_server.default]
+  for_each   = tomap(var.public_net)
+
+  assignee_id       = hcloud_server.default.id
+  assignee_type     = "server"
+  auto_delete       = each.value.auto_delete
+  delete_protection = var.protected
+  name              = "${var.server_name}.${each.key}"
+  type              = each.key
+}
+
+resource "hcloud_server_network" "default" {
+  depends_on = [hcloud_server.default]
+  for_each   = { for network in var.networks : network.subnet_id => network }
+
+  alias_ips = each.value.alias_ips
+  ip        = each.value.ip
+  server_id = hcloud_server.default.id
+  subnet_id = each.key
 }
 
 #####################################################

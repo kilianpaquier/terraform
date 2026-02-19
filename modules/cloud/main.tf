@@ -120,7 +120,7 @@ module "codespace_server" {
   placement_group_id = hcloud_placement_group.default.id
   public_keys        = [for key, value in module.shared.public_keys : key]
 
-  networks = [{ network_id = hcloud_network.codespace.id }]
+  networks = [{ subnet_id = hcloud_network_subnet.codespace.id }]
   firewalls = [
     {
       description = "Allow private SSH port"

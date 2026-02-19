@@ -35,6 +35,12 @@ variable "image" {
   description = "Server image name (debian-13, ubuntu-24.04, docker-ce, etc.)"
 }
 
+variable "keep_disk" {
+  type        = bool
+  default     = true
+  description = "Whether the disk size must be retained when upscaling the server. By keeping the disk size a downscale is later possible."
+}
+
 variable "labels" {
   type        = list(string)
   default     = []
@@ -43,9 +49,9 @@ variable "labels" {
 
 variable "networks" {
   type = list(object({
-    alias_ips  = optional(set(string), null)
-    ip         = optional(string, null)
-    network_id = number
+    alias_ips = optional(set(string), null)
+    ip        = optional(string, null)
+    subnet_id = string
   }))
   default     = []
   description = "Private networks to connect to the private server"
@@ -59,8 +65,12 @@ variable "placement_group_id" {
 
 variable "public_net" {
   type = object({
-    ipv4_enabled = optional(bool, true)
-    ipv6_enabled = optional(bool, true)
+    ipv4 = optional(object({
+      auto_delete = optional(bool, true)
+    }), {})
+    ipv6 = optional(object({
+      auto_delete = optional(bool, true)
+    }), {})
   })
   default     = {}
   description = "Public network configuration, whether to enable public access to the server or not (default yes)"
