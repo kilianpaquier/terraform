@@ -6,7 +6,6 @@ module "gitlab_project_go-builder-generator" {
 
   default_branch   = "main"
   description      = "Easily generate builders for golang structs"
-  mirror           = "https://github.com/kilianpaquier/go-builder-generator.git"
   visibility_level = "public"
 
   analytics_access_level          = "disabled"
@@ -36,18 +35,18 @@ module "gitlab_project_settings_go-builder-generator" {
   project            = module.gitlab_project_go-builder-generator.id
   protected_branches = ["main"]
 
-  # schedules = [
-  #   {
-  #     active      = false
-  #     cron        = "0 12 * * *"
-  #     description = "Scheduled pipeline for kickr layout updates"
-  #     name        = "kickr"
-  #     ref         = "refs/heads/main"
-  #   }
-  # ]
+  schedules = [
+    {
+      active      = false
+      cron        = "0 12 * * *"
+      description = "Scheduled pipeline for kickr layout updates"
+      name        = "kickr"
+      ref         = "refs/heads/main"
+    }
+  ]
 
-  # mirror = {
-  #   token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
-  #   url   = module.github_repository_go-builder-generator.http_clone_url
-  # }
+  mirror = {
+    token = sensitive(data.sops_file.sops["gitlab"].data["github_mirror_token"])
+    url   = module.github_repository_go-builder-generator.http_clone_url
+  }
 }
