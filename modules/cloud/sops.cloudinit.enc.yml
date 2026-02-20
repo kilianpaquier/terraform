@@ -5,6 +5,10 @@ coolify:
     password: ENC[AES256_GCM,data:Qds1ZEq4Utsh/mUg4zUcldr/bYg=,iv:znGo4GWgqFPJIhDiPZDeLH5uofiWnr0IjZ/AlzliQ9E=,tag:jmJ01lpL6g6nFvz75ZuYkg==,type:str]
     username: ENC[AES256_GCM,data:Qwi1u5iF8sR0h1AX7Q==,iv:sD5LbOX3Q3f6uaOZKD5GVd6nVdkfdKQ+dlA+JJXsUj8=,tag:49sMkH0hJaIqa0sYw8xg/Q==,type:str]
 codespace:
+    firewall:
+        vpn_protocol: ENC[AES256_GCM,data:W5lC,iv:tVAhBE0HTgyzurAllPE4ADqA2ljJk6odkGvipSCLMRI=,tag:G0n1T9fiwF4GAnqwyGMYEw==,type:str]
+        vpn_port: ENC[AES256_GCM,data:cq+fdyk=,iv:NEvXnGR3aRwsbi7liRru/SVaE140CIQWO3Gx6iFVTNc=,tag:0lMPjUW02wjjjC3VCr3R6A==,type:int]
+        vpn_source_ip: ENC[AES256_GCM,data:QOMHXTqZWJhC0O/fOQ==,iv:2JitZp/L3GiSVf4LCn7KIFlSy7Lp6MxwP9bltzjR3dc=,tag:z4ciQCVN+bGP7xryUKSEqQ==,type:str]
     ssh_port: ENC[AES256_GCM,data:g147TDQ=,iv:T8C4wYxfTMwGnpF2MfjdG3HlvUje8sXc7GGWchZak3I=,tag:jUcUFToj7T55fSFNKcelBQ==,type:int]
     ssh_user: ENC[AES256_GCM,data:J7aiWgK9cDaM,iv:t/coMouWiNHqP2vF+u8b19rc/GaV9zjU85ZEfKBcdCE=,tag:wroGPZxUrlp35rvq9hm3Qg==,type:str]
 sops:
@@ -18,7 +22,7 @@ sops:
             azE2NzRJbjVVTzNwV0FrWW9QMHovMUkKpGOr1Tmfk+uRlkhiUrZRYEQoPNNjh4a+
             0q267Uvhc9otgSEkOnqWj4gaGCcpF4bQfjjlnLysl2o8Vqg2JAvOHQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-02-18T18:41:16Z"
-    mac: ENC[AES256_GCM,data:OWdUFeHh5CB/cn0QCZjEHhIg8YFnAjQlOMqEEXrmoHTlRMNVAVVs45gl0kGYDOgodj1zAyM8ge3GQh7gHiPZVP4Pv+CgNaeV2S7sU6bmFx58tOs6ykDQoHdz1OTOlFG2vR5fNj49mHhVtv+Necdsz95NTJyKR98hiPSEJgPTsJQ=,iv:NTQsEJzMhyyMXTCYmXvgGXLPzoW1GgKwWC4VhPxJimA=,tag:XaIcazgpHZ1oMs/vUSnffw==,type:str]
+    lastmodified: "2026-02-20T12:18:31Z"
+    mac: ENC[AES256_GCM,data:xowlQ4A+TUgS2xry2mbXVbxTLhzw7j7BCoD45KGLP6cIFII/8QrQ3k0XPcrFoZk18IE3Waul5soKH5hxlaKDzEpPTwDoDZYJRU/Qj2+IIIqVu0bAd9ZTb5KRHcTySqSwn8qg3txDsZEVtBqOi+WM3QzP7/lkiDHXTKWf2B6D/Lg=,iv:NYvUR08k7bpTpMzfzNFq83sqYsb2PQ8dUgnx+FeBCqE=,tag:lZKRBDFWyqf7Ffry+CIZzg==,type:str]
     unencrypted_suffix: _unencrypted
     version: 3.11.0

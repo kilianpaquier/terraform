@@ -112,6 +112,7 @@ module "codespace_server" {
 
   source      = "./hcloud_server"
   server_name = "codespace"
+  protected   = true
 
   image       = "debian-13"
   location    = "fsn1"
@@ -123,11 +124,11 @@ module "codespace_server" {
   networks = [{ subnet_id = hcloud_network_subnet.codespace.id }]
   firewalls = [
     {
-      description = "Allow private SSH port"
+      description = "Allow VPN tunnel connection"
       direction   = "in"
-      port        = data.sops_file.sops["cloudinit"].data["codespace.ssh_port"]
-      protocol    = "tcp"
-      source_ips  = ["0.0.0.0/0", "::/0"]
+      port        = data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_port"]
+      protocol    = data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_protocol"]
+      source_ips  = [data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_source_ip"]]
     }
   ]
 
