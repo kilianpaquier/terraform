@@ -179,4 +179,3 @@ module "codespace_tailscale" {
   hostname            = "codespace"
   key_expiry_disabled = true
 }
-
