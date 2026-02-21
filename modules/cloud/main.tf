@@ -111,7 +111,7 @@ resource "tailscale_acl" "acls" {
   depends_on = [data.tailscale_users.users]
 
   acl = templatefile("${path.module}/configs/tailscale-acls.jsonc", {
-    users = data.tailscale_users.users
+    users = data.tailscale_users.users.users
   })
 }
 
