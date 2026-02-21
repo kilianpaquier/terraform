@@ -98,16 +98,47 @@ resource "ovh_domain_zone_record" "storageshare" {
 
 #####################################################
 #
-# Servers
+# Tailscale
 #
 #####################################################
+
+resource "tailscale_acl" "acls" {
+  acl = file("${path.module}/configs/tailscale-acls.jsonc")
+}
+
+resource "tailscale_tailnet_settings" "settings" {
+  acls_externally_managed_on                  = true
+  devices_approval_on                         = true
+  devices_auto_updates_on                     = true
+  devices_key_duration_days                   = 5
+  users_approval_on                           = true
+  users_role_allowed_to_join_external_tailnet = "admin"
+  https_enabled                               = true
+}
+
+#####################################################
+#
+# Codespace
+#
+#####################################################
+
+resource "tailscale_tailnet_key" "codespace" {
+  description         = "Register codespace into tailnet"
+  ephemeral           = false
+  expiry              = 3600
+  preauthorized       = true
+  recreate_if_invalid = "never"
+  reusable            = false
+  tags                = ["tag:terraform"]
+}
 
 module "codespace_server" {
   depends_on = [
     hcloud_network_subnet.codespace,
     hcloud_network.codespace,
     hcloud_placement_group.default,
-    hcloud_ssh_key.ssh_keys
+    hcloud_ssh_key.ssh_keys,
+    tailscale_tailnet_key.codespace
   ]
 
   source      = "./hcloud_server"
@@ -122,19 +153,30 @@ module "codespace_server" {
   public_keys        = [for key, value in module.shared.public_keys : key]
 
   networks = [{ subnet_id = hcloud_network_subnet.codespace.id }]
-  firewalls = [
-    {
-      description = "Allow VPN tunnel connection"
-      direction   = "in"
-      port        = data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_port"]
-      protocol    = data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_protocol"]
-      source_ips  = [data.sops_file.sops["cloudinit"].data["codespace.firewall.vpn_source_ip"]]
-    }
-  ]
+  # firewalls = [
+  #   {
+  #     description = "Allow SSH connection"
+  #     direction   = "in"
+  #     port        = data.sops_file.sops["cloudinit"].data["codespace.ssh_port"]
+  #     protocol    = "tcp"
+  #     source_ips  = ["0.0.0.0/0", "::/0"]
+  #   }
+  # ]
 
   user_data = templatefile("${path.module}/cloudinit/codespace.yml", {
+    auth_key    = tailscale_tailnet_key.codespace.key
+    hostname    = "codespace"
     public_keys = [for key, value in module.shared.public_keys : value]
     ssh_port    = data.sops_file.sops["cloudinit"].data["codespace.ssh_port"]
     ssh_user    = data.sops_file.sops["cloudinit"].data["codespace.ssh_user"]
   })
 }
+
+module "codespace_tailscale" {
+  depends_on = [module.codespace_server]
+  source     = "./tailscale_device"
+
+  hostname            = "codespace"
+  key_expiry_disabled = true
+}
+

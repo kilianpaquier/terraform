@@ -5,6 +5,7 @@
 #####################################################
 
 resource "hcloud_server" "default" {
+  depends_on = [hcloud_primary_ip.default]
   lifecycle {
     ignore_changes = [ssh_keys, user_data]
   }
@@ -26,22 +27,29 @@ resource "hcloud_server" "default" {
 
   ssh_keys  = var.public_keys
   user_data = var.user_data
+
+  public_net {
+    ipv4_enabled = var.public_ipv4 != null
+    ipv4         = var.public_ipv4 != null ? hcloud_primary_ip.default["ipv4"].id : null
+
+    ipv6_enabled = var.public_ipv6 != null
+    ipv6         = var.public_ipv6 != null ? hcloud_primary_ip.default["ipv6"].id : null
+  }
 }
 
 #####################################################
 #
-# Server networking
+# Networking
 #
 #####################################################
 
 resource "hcloud_primary_ip" "default" {
-  depends_on = [hcloud_server.default]
-  for_each   = tomap(var.public_net)
+  for_each   = { for k, v in { ipv4 = var.public_ipv4, ipv6 = var.public_ipv6 } : k => v if v != null }
 
-  assignee_id       = hcloud_server.default.id
   assignee_type     = "server"
   auto_delete       = each.value.auto_delete
   delete_protection = var.protected
+  location          = var.location
   name              = "${var.server_name}.${each.key}"
   type              = each.key
 }
@@ -63,7 +71,6 @@ resource "hcloud_server_network" "default" {
 #####################################################
 
 resource "hcloud_firewall" "default" {
-  count      = length(var.firewalls) > 0 ? 1 : 0
   depends_on = [hcloud_server.default]
 
   name = var.server_name

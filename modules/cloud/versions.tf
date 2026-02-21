@@ -4,11 +4,6 @@ terraform {
   backend "http" {}
 
   required_providers {
-    cloudinit = {
-      source  = "hashicorp/cloudinit"
-      version = "< 3.0.0"
-    }
-
     hcloud = {
       source  = "hetznercloud/hcloud"
       version = "< 2.0.0"
@@ -22,6 +17,11 @@ terraform {
     sops = {
       source  = "carlpett/sops"
       version = "< 2.0.0"
+    }
+
+    tailscale = {
+      source  = "tailscale/tailscale"
+      version = "< 1.0.0"
     }
   }
 }

@@ -1,0 +1,28 @@
+{
+    "grants": [
+        {
+            // Authorize members to access their own devices
+            "src": ["autogroup:member"],
+            "dst": ["autogroup:self"],
+            "ip": ["*"]
+        },
+        {
+            // Authorize administrators to access all devices
+            "src": ["autogroup:admin", "autogroup:it-admin", "autogroup:device-admin", "autogroup:owner"],
+            "dst": ["*"],
+            "ip": ["*"]
+        }
+    ],
+    "ssh": [
+        {
+            // Authorize members to access their own devices through SSH without a root user
+            "action": "check",
+            "src": ["autogroup:member"],
+            "dst": ["autogroup:self"],
+            "users": ["autogroup:nonroot"]
+        }
+    ],
+    "tagOwners": {
+        "tag:terraform": ["autogroup:admin", "autogroup:it-admin", "autogroup:device-admin", "autogroup:owner"]
+    }
+}

@@ -1,7 +1,7 @@
 #cloud-config
 
 timezone: Europe/Paris
-hostname: codespace
+hostname: ${hostname}
 
 package_update: true
 package_upgrade: true
@@ -61,3 +61,6 @@ runcmd:
 
   - ufw --force enable
   - systemctl restart fail2ban sshd
+
+  - curl -fsSL https://tailscale.com/install.sh | sh
+  - tailscale up --ssh --auth-key ${auth_key}

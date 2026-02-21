@@ -63,17 +63,20 @@ variable "placement_group_id" {
   description = "Hetzner Cloud placement group in case this server must be close to others"
 }
 
-variable "public_net" {
+variable "public_ipv4" {
   type = object({
-    ipv4 = optional(object({
-      auto_delete = optional(bool, true)
-    }), {})
-    ipv6 = optional(object({
-      auto_delete = optional(bool, true)
-    }), {})
+    auto_delete = optional(bool, true)
   })
   default     = {}
-  description = "Public network configuration, whether to enable public access to the server or not (default yes)"
+  description = "Provision an IPv4 and associate it to the hcloud server"
+}
+
+variable "public_ipv6" {
+  type = object({
+    auto_delete = optional(bool, true)
+  })
+  default     = {}
+  description = "Provision an IPv6 and associate it to the hcloud server"
 }
 
 variable "protected" {
