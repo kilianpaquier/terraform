@@ -102,16 +102,15 @@ resource "ovh_domain_zone_record" "storageshare" {
 #
 #####################################################
 
-data "tailscale_users" "users" {
-  role = "member"
+data "tailscale_users" "members" {
   type = "member"
 }
 
 resource "tailscale_acl" "acls" {
-  depends_on = [data.tailscale_users.users]
+  depends_on = [data.tailscale_users.members]
 
   acl = templatefile("${path.module}/configs/tailscale-acls.jsonc", {
-    users = data.tailscale_users.users.users
+    users = data.tailscale_users.members.users
   })
 }
 
