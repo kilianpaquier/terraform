@@ -187,5 +187,5 @@ module "codespace_tailscale" {
 
   hostname            = "codespace"
   key_expiry_disabled = true
-  tags                = ["tag:terraform", "tag:kilianpaquier"]
+  tags                = ["tag:terraform"]
 }
