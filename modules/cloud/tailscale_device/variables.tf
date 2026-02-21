@@ -11,6 +11,6 @@ variable "key_expiry_disabled" {
 
 variable "tags" {
   type        = list(string)
-  default     = ["tag:terraform"]
+  default     = []
   description = "List of tags to affect to the device"
 }

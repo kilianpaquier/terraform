@@ -14,13 +14,14 @@
         }
     ],
     "ssh": [
-        // Authorize members to access their own devices through SSH without a root user
-        {
-            "action": "check",
-            "src": ["autogroup:member"],
-            "dst": ["autogroup:self"],
-            "users": ["autogroup:nonroot"]
-        }
+%{ for user in users ~}
+		{
+			"action": "check",
+			"src": ["${user.login_name}"],
+			"dst": ["autogroup:self", "tag:${user.display_name}"],
+			"users": ["autogroup:nonroot"]
+		},
+%{ endfor ~}
     ],
     "tagOwners": {
 %{ for user in users ~}

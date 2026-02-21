@@ -34,6 +34,7 @@ resource "hcloud_network" "codespace" {
 }
 
 resource "hcloud_network_subnet" "codespace" {
+  depends_on   = [hcloud_network.codespace]
   ip_range     = "10.0.0.0/16"
   network_id   = hcloud_network.codespace.id
   network_zone = "eu-central"
@@ -138,13 +139,12 @@ resource "tailscale_tailnet_key" "codespace" {
   preauthorized       = true
   recreate_if_invalid = "never"
   reusable            = false
-  tags                = ["tag:terraform"]
+  tags                = ["tag:terraform", "tag:kilianpaquier"]
 }
 
 module "codespace_server" {
   depends_on = [
     hcloud_network_subnet.codespace,
-    hcloud_network.codespace,
     hcloud_placement_group.default,
     hcloud_ssh_key.ssh_keys,
     tailscale_tailnet_key.codespace
@@ -187,5 +187,4 @@ module "codespace_tailscale" {
 
   hostname            = "codespace"
   key_expiry_disabled = true
-  tags                = ["tag:terraform"]
 }
