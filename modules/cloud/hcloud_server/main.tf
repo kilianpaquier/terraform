@@ -44,7 +44,7 @@ resource "hcloud_server" "default" {
 #####################################################
 
 resource "hcloud_primary_ip" "default" {
-  for_each   = { for k, v in { ipv4 = var.public_ipv4, ipv6 = var.public_ipv6 } : k => v if v != null }
+  for_each = { for k, v in { ipv4 = var.public_ipv4, ipv6 = var.public_ipv6 } : k => v if v != null }
 
   assignee_type     = "server"
   auto_delete       = each.value.auto_delete
