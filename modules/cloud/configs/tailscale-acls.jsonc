@@ -23,6 +23,9 @@
         }
     ],
     "tagOwners": {
+%{ for user in users ~}
+        "tag:${user.display_name}": ["${user.login_name}"],
+%{ endfor ~}
         "tag:terraform": ["autogroup:admin", "autogroup:it-admin", "autogroup:device-admin", "autogroup:owner"]
     }
 }

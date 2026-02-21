@@ -102,8 +102,17 @@ resource "ovh_domain_zone_record" "storageshare" {
 #
 #####################################################
 
+data "tailscale_users" "users" {
+  role = "member"
+  type = "member"
+}
+
 resource "tailscale_acl" "acls" {
-  acl = file("${path.module}/configs/tailscale-acls.jsonc")
+  depends_on = [data.tailscale_users.users]
+
+  acl = templatefile("${path.module}/configs/tailscale-acls.jsonc", {
+    users = data.tailscale_users.users
+  })
 }
 
 resource "tailscale_tailnet_settings" "settings" {
@@ -123,6 +132,7 @@ resource "tailscale_tailnet_settings" "settings" {
 #####################################################
 
 resource "tailscale_tailnet_key" "codespace" {
+  depends_on          = [tailscale_acl.acls]
   description         = "Register codespace into tailnet"
   ephemeral           = false
   expiry              = 3600
@@ -152,8 +162,7 @@ module "codespace_server" {
   placement_group_id = hcloud_placement_group.default.id
   public_keys        = [for key, value in module.shared.public_keys : key]
 
-  networks    = [{ subnet_id = hcloud_network_subnet.codespace.id }]
-  public_ipv4 = null
+  networks = [{ subnet_id = hcloud_network_subnet.codespace.id }]
   # firewalls = [
   #   {
   #     description = "Allow SSH connection"
@@ -179,4 +188,5 @@ module "codespace_tailscale" {
 
   hostname            = "codespace"
   key_expiry_disabled = true
+  tags                = ["tag:terraform", "tag:kilianpaquier"]
 }
