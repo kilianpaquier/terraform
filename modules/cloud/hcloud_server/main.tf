@@ -48,7 +48,7 @@ resource "hcloud_primary_ip" "default" {
 
   assignee_type     = "server"
   auto_delete       = each.value.auto_delete
-  delete_protection = var.protected
+  delete_protection = each.value.protected
   location          = var.location
   name              = "${var.server_name}.${each.key}"
   type              = each.key

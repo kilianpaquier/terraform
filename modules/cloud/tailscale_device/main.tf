@@ -3,11 +3,13 @@ data "tailscale_device" "default" {
 }
 
 resource "tailscale_device_key" "default" {
+  depends_on          = [data.tailscale_device.default]
   device_id           = data.tailscale_device.default.node_id
   key_expiry_disabled = var.key_expiry_disabled
 }
 
 resource "tailscale_device_tags" "default" {
-  device_id = data.tailscale_device.default.node_id
-  tags      = var.tags
+  depends_on = [data.tailscale_device.default]
+  device_id  = data.tailscale_device.default.node_id
+  tags       = var.tags
 }

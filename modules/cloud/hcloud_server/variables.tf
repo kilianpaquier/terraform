@@ -66,6 +66,7 @@ variable "placement_group_id" {
 variable "public_ipv4" {
   type = object({
     auto_delete = optional(bool, true)
+    protected   = optional(bool, false)
   })
   default     = {}
   description = "Provision an IPv4 and associate it to the hcloud server"
@@ -74,6 +75,7 @@ variable "public_ipv4" {
 variable "public_ipv6" {
   type = object({
     auto_delete = optional(bool, true)
+    protected   = optional(bool, false)
   })
   default     = {}
   description = "Provision an IPv6 and associate it to the hcloud server"
